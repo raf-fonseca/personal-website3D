@@ -3,10 +3,10 @@ import { Suspense, useState } from "react";
 import { Canvas } from "@react-three/fiber";
 import { Environment, Sky } from "@react-three/drei";
 import { Island } from "@/components/Island";
+import { PirateShip } from "@/components/PirateShip";
 import Loader from "@/components/Loader";
 
 export default function Home() {
-  const [isRotating, setIsRotating] = useState(false);
   const [currentStage, setCurrentStage] = useState(1);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -22,7 +22,22 @@ export default function Home() {
     return { scale, position };
   };
 
-  const { scale, position } = adjustIslandForScreenSize();
+  const adjustShipForScreenSize = () => {
+    let scale = 0.25;
+    let position = [0, -0.3, 1.25]; // Adjust these values to position the ship relative to the island
+
+    if (window.innerWidth < 768) {
+      scale = 0.003;
+      position = [0.2, -0.3, 0.5];
+    }
+
+    return { scale, position };
+  };
+
+  const { scale: islandScale, position: islandPosition } =
+    adjustIslandForScreenSize();
+  const { scale: shipScale, position: shipPosition } =
+    adjustShipForScreenSize();
 
   return (
     <main
@@ -44,44 +59,36 @@ export default function Home() {
           width: "100%",
           height: "100%",
           background: "transparent",
-          cursor: isRotating ? "grabbing" : "grab",
           display: "block",
         }}
         shadows
       >
         <Suspense fallback={<Loader />}>
           <Sky
-            sunPosition={[500, 200, -1000]}
+            sunPosition={[500, 180, -1000]}
             turbidity={0.05}
-            rayleigh={2}
-            mieCoefficient={0.1}
-            mieDirectionalG={0.9}
+            rayleigh={1.5}
+            mieCoefficient={0.002}
+            mieDirectionalG={0.8}
+            azimuth={0.25}
+            exposure={0.5}
           />
-          <Environment preset="dawn" />
+          <Environment preset="sunset" />
 
-          {/* Main sun light */}
-          <directionalLight
-            position={[10, 8, 5]}
-            intensity={2}
-            castShadow
-            shadow-mapSize={[1024, 1024]}
-            color="#ffd7b5"
-          />
+          {/* Ambient light for overall scene */}
+          <ambientLight intensity={0.3} color="#ffffff" />
 
-          {/* Sky light */}
-          <ambientLight intensity={0.8} color="#b6d1ff" />
-
-          {/* Complementary fill light */}
-          <pointLight position={[-5, 3, -5]} intensity={0.7} color="#80a8ff" />
+          {/* Soft fill light */}
+          <pointLight position={[-5, 3, -5]} intensity={0.2} color="#ffffff" />
 
           <Island
-            scale={scale}
-            position={position}
-            isRotating={isRotating}
-            setIsRotating={setIsRotating}
+            scale={islandScale}
+            position={islandPosition}
             setCurrentStage={setCurrentStage}
             setIsLoading={setIsLoading}
           />
+
+          {/* <PirateShip scale={shipScale} position={shipPosition} /> */}
         </Suspense>
       </Canvas>
 
