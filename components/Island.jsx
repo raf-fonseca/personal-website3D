@@ -10,6 +10,7 @@ export function Island({ setCurrentStage, setIsLoading, ...props }) {
   const islandRef = useRef();
   const rotationProgressRef = useRef(0);
   const [isZooming, setIsZooming] = useState(true);
+  const [isSpinning, setIsSpinning] = useState(true);
   const initialCameraPosition = useRef([0, 5, 10]);
   const targetCameraPosition = useRef([0, 0, 2.5]);
   const initialCameraRotation = useRef(-Math.PI / 3);
@@ -47,12 +48,16 @@ export function Island({ setCurrentStage, setIsLoading, ...props }) {
 
       // Only rotate island if we haven't completed a full rotation
       if (rotationProgressRef.current < Math.PI * 2) {
-        islandRef.current.rotation.y += 0.05;
-        rotationProgressRef.current += 0.05;
+        islandRef.current.rotation.y += 0.07;
+        rotationProgressRef.current += 0.07;
+      } else if (isSpinning) {
+        setIsSpinning(false);
+        // Set new camera target for zoom-in effect with downward movement
+        targetCameraPosition.current = [0, -0.1, 1.5]; // Added -0.5 for Y position to move down
       }
 
-      // Check if camera movement is complete
-      if (Math.abs(dz) < 0.1 && Math.abs(rotationDiff) < 0.01) {
+      // Check if final camera movement is complete
+      if (!isSpinning && Math.abs(dz - 1.5) < 0.1 && Math.abs(dy + 0.5) < 0.1) {
         setIsZooming(false);
       }
       return;

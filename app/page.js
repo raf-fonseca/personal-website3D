@@ -3,7 +3,7 @@ import { Suspense, useState } from "react";
 import { Canvas } from "@react-three/fiber";
 import { Environment, Sky } from "@react-three/drei";
 import { Island } from "@/components/Island";
-import { PirateShip } from "@/components/PirateShip";
+import { Robot } from "@/components/Robot";
 import Loader from "@/components/Loader";
 
 export default function Home() {
@@ -22,13 +22,18 @@ export default function Home() {
     return { scale, position };
   };
 
-  const adjustShipForScreenSize = () => {
-    let scale = 0.25;
-    let position = [0, -0.3, 1.25]; // Adjust these values to position the ship relative to the island
+  const adjustRobotForScreenSize = () => {
+    let scale = 0.3;
+    // Adjust thee values to move the robot closer to the island
+    // [x, y, z] where:
+    // x: left/right (-/+)
+    // y: up/down (-/+)
+    // z: forward/backward (-/+)e
+    let position = [-0, -0.35, 0.6];
 
     if (window.innerWidth < 768) {
-      scale = 0.003;
-      position = [0.2, -0.3, 0.5];
+      scale = 0.3;
+      position = [0.1, -0.7, 0.2];
     }
 
     return { scale, position };
@@ -36,8 +41,8 @@ export default function Home() {
 
   const { scale: islandScale, position: islandPosition } =
     adjustIslandForScreenSize();
-  const { scale: shipScale, position: shipPosition } =
-    adjustShipForScreenSize();
+  const { scale: robotScale, position: robotPosition } =
+    adjustRobotForScreenSize();
 
   return (
     <main
@@ -88,7 +93,7 @@ export default function Home() {
             setIsLoading={setIsLoading}
           />
 
-          {/* <PirateShip scale={shipScale} position={shipPosition} /> */}
+          <Robot scale={robotScale} position={robotPosition} />
         </Suspense>
       </Canvas>
 
