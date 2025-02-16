@@ -4,13 +4,14 @@ import { Canvas } from "@react-three/fiber";
 import { Environment, Sky } from "@react-three/drei";
 import { Island } from "@/components/Island";
 import { Robot } from "@/components/Robot";
+import { Button } from "@/components/ui/button";
 import Loader from "@/components/Loader";
 
 export default function Home() {
   const [currentStage, setCurrentStage] = useState(1);
   const [isLoading, setIsLoading] = useState(true);
   const [islandAnimationComplete, setIslandAnimationComplete] = useState(false);
-  const [robotPosition, setRobotPosition] = useState([0, -0.35, 0.6]);
+  const [robotPosition, setRobotPosition] = useState([, -0.35, 0.6]);
   const cameraRef = useRef();
 
   const adjustIslandForScreenSize = () => {
@@ -40,14 +41,7 @@ export default function Home() {
   const { scale: robotScale } = adjustRobotForScreenSize();
 
   return (
-    <main
-      style={{
-        width: "100vw",
-        height: "100vh",
-        overflow: "hidden",
-        position: "relative",
-      }}
-    >
+    <main className="w-screen h-screen overflow-hidden relative">
       <Canvas
         camera={{
           fov: 45,
@@ -55,12 +49,7 @@ export default function Home() {
           far: 2000,
           position: [0, 0, 2.5],
         }}
-        style={{
-          width: "100%",
-          height: "100%",
-          background: "transparent",
-          display: "block",
-        }}
+        className="w-full h-full bg-transparent absolute"
         shadows
       >
         <Suspense fallback={<Loader />}>
@@ -75,10 +64,8 @@ export default function Home() {
           />
           <Environment preset="sunset" />
 
-          {/* Ambient light for overall scene */}
           <ambientLight intensity={0.3} color="#ffffff" />
 
-          {/* Soft fill light */}
           <pointLight position={[-5, 3, -5]} intensity={0.2} color="#ffffff" />
 
           <Island
@@ -92,15 +79,24 @@ export default function Home() {
 
           <Robot
             scale={robotScale}
-            isIslandAnimationComplete={islandAnimationComplete}
+            islandAnimationComplete={islandAnimationComplete}
             setRobotPosition={setRobotPosition}
           />
         </Suspense>
       </Canvas>
 
-      {isLoading && (
-        <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50">
-          <div className="text-white text-xl">Loading your experience...</div>
+      {islandAnimationComplete && (
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50">
+          <Button
+            variant="island"
+            size="lg"
+            className="font-bold text-xl hover:scale-110 transition-all duration-300"
+            onClick={() => {
+              console.log("Start clicked!");
+            }}
+          >
+            START
+          </Button>
         </div>
       )}
     </main>
