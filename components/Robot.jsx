@@ -2,11 +2,18 @@
 import { useRef, useEffect } from "react";
 import { useGLTF, useAnimations } from "@react-three/drei";
 import { RectAreaLight } from "three";
+import { useSpring, animated } from "@react-spring/three";
 
-export function Robot(props) {
+export function Robot({ isIslandAnimationComplete, ...props }) {
   const group = useRef();
   const { scene, animations } = useGLTF("/robot.glb");
   const { actions } = useAnimations(animations, group);
+
+  // Spring animation for robot's position
+  const { position } = useSpring({
+    position: isIslandAnimationComplete ? [0, -0.35, 0.6] : [0, 5, 0.6],
+    config: { mass: 1, tension: 280, friction: 60 },
+  });
 
   // Enable shadows and adjust materials for the robot
   scene.traverse((child) => {
@@ -46,9 +53,9 @@ export function Robot(props) {
   }, [actions]);
 
   return (
-    <group ref={group} {...props}>
+    <animated.group ref={group} {...props} position={position}>
       <primitive object={scene} rotation={[0, Math.PI, 0]} />
-    </group>
+    </animated.group>
   );
 }
 

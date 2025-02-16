@@ -4,7 +4,12 @@ import { useGLTF } from "@react-three/drei";
 import { useFrame, useThree } from "@react-three/fiber";
 import { a } from "@react-spring/three";
 
-export function Island({ setCurrentStage, setIsLoading, ...props }) {
+export function Island({
+  setCurrentStage,
+  setIsLoading,
+  setIslandAnimationComplete,
+  ...props
+}) {
   const { scene } = useGLTF("/Fantasy Island 3D Model.glb");
   const { gl, camera } = useThree();
   const islandRef = useRef();
@@ -12,7 +17,7 @@ export function Island({ setCurrentStage, setIsLoading, ...props }) {
   const [isZooming, setIsZooming] = useState(true);
   const [isSpinning, setIsSpinning] = useState(true);
   const initialCameraPosition = useRef([0, 5, 10]);
-  const targetCameraPosition = useRef([0, 0, 2.5]);
+  const targetCameraPosition = useRef([0, 0, 1.7]);
   const initialCameraRotation = useRef(-Math.PI / 3);
   const targetCameraRotation = useRef(0);
 
@@ -52,8 +57,7 @@ export function Island({ setCurrentStage, setIsLoading, ...props }) {
         rotationProgressRef.current += 0.07;
       } else if (isSpinning) {
         setIsSpinning(false);
-        // Set new camera target for zoom-in effect with downward movement
-        targetCameraPosition.current = [0, -0.1, 1.5]; // Added -0.5 for Y position to move down
+        setIslandAnimationComplete(true);
       }
 
       // Check if final camera movement is complete

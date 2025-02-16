@@ -9,6 +9,7 @@ import Loader from "@/components/Loader";
 export default function Home() {
   const [currentStage, setCurrentStage] = useState(1);
   const [isLoading, setIsLoading] = useState(true);
+  const [islandAnimationComplete, setIslandAnimationComplete] = useState(false);
 
   const adjustIslandForScreenSize = () => {
     let scale = 0.01;
@@ -91,9 +92,13 @@ export default function Home() {
             position={islandPosition}
             setCurrentStage={setCurrentStage}
             setIsLoading={setIsLoading}
+            setIslandAnimationComplete={setIslandAnimationComplete}
           />
 
-          <Robot scale={robotScale} position={robotPosition} />
+          <Robot
+            scale={robotScale}
+            isIslandAnimationComplete={islandAnimationComplete}
+          />
         </Suspense>
       </Canvas>
 
