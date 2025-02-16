@@ -1,5 +1,5 @@
 "use client";
-import { Suspense, useState, useRef } from "react";
+import { Suspense, useState, useRef, useEffect } from "react";
 import { Canvas } from "@react-three/fiber";
 import { Environment, Sky } from "@react-three/drei";
 import { Island } from "@/components/Island";
@@ -11,34 +11,39 @@ export default function Home() {
   const [currentStage, setCurrentStage] = useState(1);
   const [isLoading, setIsLoading] = useState(true);
   const [islandAnimationComplete, setIslandAnimationComplete] = useState(false);
-  const [robotPosition, setRobotPosition] = useState([, -0.35, 0.6]);
+  const [robotPosition, setRobotPosition] = useState([0, -0.35, 0.6]);
+  const [dimensions, setDimensions] = useState({
+    scale: 0.01,
+    position: [0, -0.5, 0],
+    robotScale: 0.28,
+  });
   const cameraRef = useRef();
 
-  const adjustIslandForScreenSize = () => {
-    let scale = 0.01;
-    let position = [0, -0.5, 0];
+  useEffect(() => {
+    // Handle window resize
+    const adjustSizes = () => {
+      if (window.innerWidth < 768) {
+        setDimensions({
+          scale: 0.008,
+          position: [0, -2.5, 0],
+          robotScale: 0.3,
+        });
+      } else {
+        setDimensions({
+          scale: 0.01,
+          position: [0, -0.5, 0],
+          robotScale: 0.28,
+        });
+      }
+    };
 
-    if (window.innerWidth < 768) {
-      scale = 0.008;
-      position = [0, -2.5, 0];
-    }
+    // Initial adjustment
+    adjustSizes();
 
-    return { scale, position };
-  };
-
-  const adjustRobotForScreenSize = () => {
-    let scale = 0.28;
-
-    if (window.innerWidth < 768) {
-      scale = 0.3;
-    }
-
-    return { scale };
-  };
-
-  const { scale: islandScale, position: islandPosition } =
-    adjustIslandForScreenSize();
-  const { scale: robotScale } = adjustRobotForScreenSize();
+    // Add resize listener
+    window.addEventListener("resize", adjustSizes);
+    return () => window.removeEventListener("resize", adjustSizes);
+  }, []);
 
   return (
     <main className="w-screen h-screen overflow-hidden relative">
@@ -69,8 +74,8 @@ export default function Home() {
           <pointLight position={[-5, 3, -5]} intensity={0.2} color="#ffffff" />
 
           <Island
-            scale={islandScale}
-            position={islandPosition}
+            scale={dimensions.scale}
+            position={dimensions.position}
             setCurrentStage={setCurrentStage}
             setIsLoading={setIsLoading}
             setIslandAnimationComplete={setIslandAnimationComplete}
@@ -78,7 +83,7 @@ export default function Home() {
           />
 
           <Robot
-            scale={robotScale}
+            scale={dimensions.robotScale}
             islandAnimationComplete={islandAnimationComplete}
             setRobotPosition={setRobotPosition}
           />
