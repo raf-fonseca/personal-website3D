@@ -8,6 +8,7 @@ export function Island({
   setCurrentStage,
   setIsLoading,
   setIslandAnimationComplete,
+  robotPosition,
   ...props
 }) {
   const { scene } = useGLTF("/Fantasy Island 3D Model.glb");
@@ -65,6 +66,11 @@ export function Island({
         setIsZooming(false);
       }
       return;
+    } else {
+      // Follow robot with camera when not zooming
+      const [_, __, robotZ] = robotPosition;
+      const cameraOffset = 2; // Distance behind robot
+      camera.position.z = robotZ + cameraOffset;
     }
   });
 

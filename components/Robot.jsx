@@ -1,61 +1,85 @@
 "use client";
 import { useRef, useEffect } from "react";
 import { useGLTF, useAnimations } from "@react-three/drei";
-import { RectAreaLight } from "three";
-import { useSpring, animated } from "@react-spring/three";
+import { useFrame } from "@react-three/fiber";
 
-export function Robot({ isIslandAnimationComplete, ...props }) {
+export function Robot({
+  isIslandAnimationComplete,
+  setRobotPosition,
+  ...props
+}) {
   const group = useRef();
   const { scene, animations } = useGLTF("/robot.glb");
   const { actions } = useAnimations(animations, group);
+  const positionZ = useRef(0.6);
+  const moveSpeed = 0.1;
+  const rotationProgressRef = useRef(0);
 
-  // Spring animation for robot's position
-  const { position } = useSpring({
-    position: isIslandAnimationComplete ? [0, -0.35, 0.6] : [0, 5, 0.6],
-    config: { mass: 1, tension: 280, friction: 60 },
+  useFrame(() => {
+    if (!isIslandAnimationComplete) {
+      if (rotationProgressRef.current < Math.PI * 2) {
+        // Calculate new position around the circle
+        const radius = 0.6; // Distance from center
+        const angle = rotationProgressRef.current;
+        const x = Math.sin(angle) * radius;
+        const z = Math.cos(angle) * radius;
+
+        // Update position and face center
+        group.current.position.x = x;
+        group.current.position.z = z;
+        group.current.rotation.y = angle + Math.PI; // Keep facing center
+
+        rotationProgressRef.current += 0.07;
+      }
+    }
   });
 
-  // Enable shadows and adjust materials for the robot
+  // Handle keyboard input
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      if (!isIslandAnimationComplete) return;
+
+      switch (event.key) {
+        case "ArrowUp":
+          positionZ.current -= moveSpeed;
+          break;
+        case "ArrowDown":
+          positionZ.current += moveSpeed;
+          break;
+      }
+      setRobotPosition([0, -0.35, positionZ.current]);
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [isIslandAnimationComplete, setRobotPosition]);
+
   scene.traverse((child) => {
     if (child.isMesh) {
       child.castShadow = true;
       child.receiveShadow = true;
 
       if (child.material) {
-        child.material.roughness = 0.4; // Reduced roughness for more shine
-        child.material.metalness = 0.6; // Increased metalness
-        child.material.emissive.set("#ffffff"); // Add slight glow
-        child.material.emissiveIntensity = 0.2; // Control glow intensity
+        child.material.roughness = 0.4;
+        child.material.metalness = 0.6;
+        child.material.emissive.set("#ffffff");
+        child.material.emissiveIntensity = 0.2;
       }
     }
   });
 
   useEffect(() => {
-    const robotLight = new RectAreaLight("#ffffff", 0.3, 1, 1);
-    robotLight.position.set(0, 0.5, 0.5);
-    robotLight.lookAt(0, 0, 0);
-    group.current.add(robotLight);
-
-    return () => {
-      group.current.remove(robotLight);
-    };
-  }, []);
-
-  // Play animation on load
-  useEffect(() => {
-    console.log("Available animations:", Object.keys(actions));
-
     const animation = actions["Take 001"];
     if (animation) {
       animation.reset().play();
-      animation.setLoop(true, Infinity); // Make it loop infinitely
+      animation.setLoop(true, Infinity);
     }
   }, [actions]);
 
   return (
-    <animated.group ref={group} {...props} position={position}>
+    <group ref={group} {...props} position={[0, -0.35, positionZ.current]}>
       <primitive object={scene} rotation={[0, Math.PI, 0]} />
-    </animated.group>
+    </group>
   );
 }
 

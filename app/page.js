@@ -1,5 +1,5 @@
 "use client";
-import { Suspense, useState } from "react";
+import { Suspense, useState, useRef } from "react";
 import { Canvas } from "@react-three/fiber";
 import { Environment, Sky } from "@react-three/drei";
 import { Island } from "@/components/Island";
@@ -10,6 +10,8 @@ export default function Home() {
   const [currentStage, setCurrentStage] = useState(1);
   const [isLoading, setIsLoading] = useState(true);
   const [islandAnimationComplete, setIslandAnimationComplete] = useState(false);
+  const [robotPosition, setRobotPosition] = useState([0, -0.35, 0.6]);
+  const cameraRef = useRef();
 
   const adjustIslandForScreenSize = () => {
     let scale = 0.01;
@@ -24,26 +26,18 @@ export default function Home() {
   };
 
   const adjustRobotForScreenSize = () => {
-    let scale = 0.3;
-    // Adjust thee values to move the robot closer to the island
-    // [x, y, z] where:
-    // x: left/right (-/+)
-    // y: up/down (-/+)
-    // z: forward/backward (-/+)e
-    let position = [-0, -0.35, 0.6];
+    let scale = 0.28;
 
     if (window.innerWidth < 768) {
       scale = 0.3;
-      position = [0.1, -0.7, 0.2];
     }
 
-    return { scale, position };
+    return { scale };
   };
 
   const { scale: islandScale, position: islandPosition } =
     adjustIslandForScreenSize();
-  const { scale: robotScale, position: robotPosition } =
-    adjustRobotForScreenSize();
+  const { scale: robotScale } = adjustRobotForScreenSize();
 
   return (
     <main
@@ -93,11 +87,13 @@ export default function Home() {
             setCurrentStage={setCurrentStage}
             setIsLoading={setIsLoading}
             setIslandAnimationComplete={setIslandAnimationComplete}
+            robotPosition={robotPosition}
           />
 
           <Robot
             scale={robotScale}
             isIslandAnimationComplete={islandAnimationComplete}
+            setRobotPosition={setRobotPosition}
           />
         </Suspense>
       </Canvas>
