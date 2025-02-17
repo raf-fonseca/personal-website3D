@@ -79,14 +79,18 @@ export function Island({
       const [robotX, robotY, robotZ] = robotPosition;
 
       // Camera settings
-      const cameraDistance = 0.3;
-      const cameraHeight = 0.4;
+      const cameraDistance = 1.2;
+      const cameraHeight = 0.3;
       const cameraLag = 0.08;
 
-      // Calculate camera position behind and above robot
-      const targetCameraX = robotX;
+      // Calculate camera position that orbits with the robot
+      const robotAngle = Math.atan2(robotX, robotZ); // Get robot's current angle
+      const cameraAngle = robotAngle; // Camera stays behind robot (add PI to face opposite)
+
+      // Calculate camera position in orbit
+      const targetCameraX = robotX + Math.sin(cameraAngle) * cameraDistance;
       const targetCameraY = robotY + cameraHeight;
-      const targetCameraZ = robotZ + cameraDistance;
+      const targetCameraZ = robotZ + Math.cos(cameraAngle) * cameraDistance;
 
       // Smooth camera movement
       camera.position.x += (targetCameraX - camera.position.x) * cameraLag;
@@ -95,10 +99,6 @@ export function Island({
 
       // Make camera look at robot
       camera.lookAt(robotX, robotY + 0.1, robotZ);
-
-      // Rotate island with robot's movement
-      const rotationSpeed = 0.02; // Match with robot's rotation speed
-      // islandRef.current.rotation.y += rotationSpeed;
     }
   });
 

@@ -27,9 +27,9 @@ export function Robot({
       movementPhase === "initial"
         ? Math.PI // Initial position
         : movementPhase === "movingUp"
-        ? rotationProgressRef.current // Continuous rotation
+        ? rotationProgressRef.current * 0.5 // Continuous rotation
         : movementPhase === "turningBack"
-        ? Math.PI
+        ? Math.PI * 2 // Final angle - you can adjust this multiplier
         : 0,
       0,
     ],
@@ -43,7 +43,7 @@ export function Robot({
     if (!islandAnimationComplete) {
       // Initial circular movement
       if (rotationProgressRef.current < Math.PI * 2) {
-        const radius = 0.4;
+        const radius = 0.45;
         const angle = rotationProgressRef.current;
         const x = Math.sin(angle) * radius;
         const z = Math.cos(angle) * radius;
@@ -64,7 +64,7 @@ export function Robot({
       // Game started movement
       rotationProgressRef.current += 0.02;
 
-      const radius = 0.4;
+      const radius = 0.45;
       const x = Math.sin(rotationProgressRef.current) * radius;
       const z = Math.cos(rotationProgressRef.current) * radius;
 
