@@ -14,10 +14,11 @@ export default function Home() {
   const [robotPosition, setRobotPosition] = useState([0, -0.35, 0.6]);
   const [dimensions, setDimensions] = useState({
     scale: 0.01,
-    position: [0, -0.5, 0],
+    position: [0, -0.5, 1],
     robotScale: 0.28,
   });
   const cameraRef = useRef();
+  const [gameStarted, setGameStarted] = useState(false);
 
   useEffect(() => {
     // Handle window resize
@@ -26,13 +27,13 @@ export default function Home() {
         setDimensions({
           scale: 0.008,
           position: [0, -2.5, 0],
-          robotScale: 0.3,
+          robotScale: 0.06,
         });
       } else {
         setDimensions({
           scale: 0.01,
           position: [0, -0.5, 0],
-          robotScale: 0.28,
+          robotScale: 0.12,
         });
       }
     };
@@ -52,7 +53,6 @@ export default function Home() {
           fov: 45,
           near: 0.1,
           far: 2000,
-          position: [0, 0, 2.5],
         }}
         className="w-full h-full bg-transparent absolute"
         shadows
@@ -79,6 +79,7 @@ export default function Home() {
             setCurrentStage={setCurrentStage}
             setIsLoading={setIsLoading}
             setIslandAnimationComplete={setIslandAnimationComplete}
+            gameStarted={gameStarted}
             robotPosition={robotPosition}
           />
 
@@ -86,21 +87,22 @@ export default function Home() {
             scale={dimensions.robotScale}
             islandAnimationComplete={islandAnimationComplete}
             setRobotPosition={setRobotPosition}
+            gameStarted={gameStarted}
           />
         </Suspense>
       </Canvas>
 
-      {islandAnimationComplete && (
+      {islandAnimationComplete && !gameStarted && (
         <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50">
           <Button
             variant="island"
             size="lg"
             className="font-bold text-xl hover:scale-110 transition-all duration-300"
             onClick={() => {
-              console.log("Start clicked!");
+              setGameStarted(true);
             }}
           >
-            START
+            Start
           </Button>
         </div>
       )}

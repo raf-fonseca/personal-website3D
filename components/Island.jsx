@@ -3,11 +3,13 @@ import { useRef, useEffect, useState } from "react";
 import { useGLTF } from "@react-three/drei";
 import { useFrame, useThree } from "@react-three/fiber";
 import { a } from "@react-spring/three";
+import * as THREE from "three";
 
 export function Island({
   setCurrentStage,
   setIsLoading,
   setIslandAnimationComplete,
+  gameStarted,
   robotPosition,
   ...props
 }) {
@@ -18,9 +20,11 @@ export function Island({
   const [isZooming, setIsZooming] = useState(true);
   const [isSpinning, setIsSpinning] = useState(true);
   const initialCameraPosition = useRef([0, 5, 10]);
-  const targetCameraPosition = useRef([0, 0, 1.7]);
+  const targetCameraPosition = useRef([0, -0.2, 1]);
   const initialCameraRotation = useRef(-Math.PI / 3);
   const targetCameraRotation = useRef(0);
+  const cameraOffset = useRef({ x: 0, y: 0.5, z: 2 });
+  const islandRotationRef = useRef(Math.PI); // Initial rotation
 
   // Enable shadows for all meshes in the scene
   scene.traverse((child) => {
@@ -66,11 +70,35 @@ export function Island({
         setIsZooming(false);
       }
       return;
-    } else {
-      // Follow robot with camera when not zooming
-      const [_, __, robotZ] = robotPosition;
-      const cameraOffset = 2; // Distance behind robot
-      camera.position.z = robotZ + cameraOffset;
+    }
+  });
+
+  // Island rotation and camera following
+  useFrame(() => {
+    if (gameStarted) {
+      const [robotX, robotY, robotZ] = robotPosition;
+
+      // Camera settings
+      const cameraDistance = 0.3;
+      const cameraHeight = 0.4;
+      const cameraLag = 0.08;
+
+      // Calculate camera position behind and above robot
+      const targetCameraX = robotX;
+      const targetCameraY = robotY + cameraHeight;
+      const targetCameraZ = robotZ + cameraDistance;
+
+      // Smooth camera movement
+      camera.position.x += (targetCameraX - camera.position.x) * cameraLag;
+      camera.position.y += (targetCameraY - camera.position.y) * cameraLag;
+      camera.position.z += (targetCameraZ - camera.position.z) * cameraLag;
+
+      // Make camera look at robot
+      camera.lookAt(robotX, robotY + 0.1, robotZ);
+
+      // Rotate island with robot's movement
+      const rotationSpeed = 0.02; // Match with robot's rotation speed
+      // islandRef.current.rotation.y += rotationSpeed;
     }
   });
 
