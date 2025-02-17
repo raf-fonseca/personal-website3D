@@ -6,6 +6,7 @@ import { Island } from "@/components/Island";
 import { Robot } from "@/components/Robot";
 import { Button } from "@/components/ui/button";
 import Loader from "@/components/Loader";
+import WorkExperience from "@/components/work_experience/page";
 
 export default function Home() {
   const [currentStage, setCurrentStage] = useState(1);
@@ -19,6 +20,7 @@ export default function Home() {
   });
   const cameraRef = useRef();
   const [gameStarted, setGameStarted] = useState(false);
+  const [showAbout, setShowAbout] = useState(false);
 
   useEffect(() => {
     // Handle window resize
@@ -88,6 +90,7 @@ export default function Home() {
             islandAnimationComplete={islandAnimationComplete}
             setRobotPosition={setRobotPosition}
             gameStarted={gameStarted}
+            setShowAbout={setShowAbout}
           />
         </Suspense>
       </Canvas>
@@ -106,6 +109,8 @@ export default function Home() {
           </Button>
         </div>
       )}
+
+      <WorkExperience isVisible={showAbout} />
     </main>
   );
 }

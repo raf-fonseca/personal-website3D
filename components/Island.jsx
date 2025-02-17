@@ -13,7 +13,7 @@ export function Island({
   robotPosition,
   ...props
 }) {
-  const { scene } = useGLTF("/Fantasy Island 3D Model.glb");
+  const { scene } = useGLTF("/3D/Fantasy Island 3D Model.glb");
   const { gl, camera } = useThree();
   const islandRef = useRef();
   const rotationProgressRef = useRef(0);
@@ -129,4 +129,4 @@ export function Island({
   );
 }
 
-useGLTF.preload("/Fantasy Island 3D Model.glb");
+useGLTF.preload("/3D/Fantasy Island 3D Model.glb");

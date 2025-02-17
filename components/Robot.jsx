@@ -8,10 +8,11 @@ export function Robot({
   islandAnimationComplete,
   setRobotPosition,
   gameStarted,
+  setShowAbout,
   ...props
 }) {
   const group = useRef();
-  const { scene, animations } = useGLTF("/robot.glb");
+  const { scene, animations } = useGLTF("/3D/robot.glb");
   const { actions } = useAnimations(animations, group);
   const rotationProgressRef = useRef(0);
   const isMovingForward = useRef(false);
@@ -78,6 +79,7 @@ export function Robot({
       if (rotationProgressRef.current >= Math.PI) {
         setMovementPhase("turningBack");
         isMovingForward.current = false;
+        setShowAbout(true);
       }
     }
   });
@@ -107,4 +109,4 @@ export function Robot({
   );
 }
 
-useGLTF.preload("/robot.glb");
+useGLTF.preload("/3D/robot.glb");
