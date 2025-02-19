@@ -86,10 +86,12 @@ export function Robot({
 
   useEffect(() => {
     if (gameStarted && movementPhase === "initial") {
-      // Remove setTimeout and start movement immediately
-      setMovementPhase("movingUp");
-      isMovingForward.current = true;
-      rotationProgressRef.current = 0; // Reset rotation for the upward spiral
+      // Add a small delay before starting the upward movement
+      setTimeout(() => {
+        setMovementPhase("movingUp");
+        isMovingForward.current = true;
+        rotationProgressRef.current = 0; // Reset rotation for the upward spiral
+      }, 500); // 100ms delay
     }
   }, [gameStarted, movementPhase]);
 

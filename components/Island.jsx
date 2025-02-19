@@ -20,7 +20,7 @@ export function Island({
   const [isZooming, setIsZooming] = useState(true);
   const [isSpinning, setIsSpinning] = useState(true);
   const initialCameraPosition = useRef([0, 5, 10]);
-  const targetCameraPosition = useRef([0, -0.2, 1]);
+  const targetCameraPosition = useRef([0, -0.2, 1.1]);
   const initialCameraRotation = useRef(-Math.PI / 3);
   const targetCameraRotation = useRef(0);
   const cameraOffset = useRef({ x: 0, y: 0.5, z: 2 });
@@ -43,6 +43,8 @@ export function Island({
     if (isZooming) {
       // Camera position interpolation
       const [targetX, targetY, targetZ] = targetCameraPosition.current;
+      const [robotX, robotY, robotZ] = robotPosition;
+
       const dx = targetX - camera.position.x;
       const dy = targetY - camera.position.y;
       const dz = targetZ - camera.position.z;
@@ -65,6 +67,30 @@ export function Island({
         setIslandAnimationComplete(true);
       }
 
+      // Start transitioning camera look-at after spinning is complete
+      if (!isSpinning) {
+        const currentTarget = new THREE.Vector3(0, 0, 0);
+        camera.getWorldDirection(currentTarget);
+
+        const targetPosition = new THREE.Vector3(robotX, robotY + 0.1, robotZ);
+        const cameraPosition = new THREE.Vector3(
+          camera.position.x,
+          camera.position.y,
+          camera.position.z
+        );
+
+        // Calculate interpolated look-at position
+        targetPosition.sub(cameraPosition).normalize();
+        currentTarget.lerp(targetPosition, 0.05);
+
+        // Apply the interpolated look-at
+        camera.lookAt(
+          camera.position.x + currentTarget.x,
+          camera.position.y + currentTarget.y,
+          camera.position.z + currentTarget.z
+        );
+      }
+
       // Check if final camera movement is complete
       if (!isSpinning && Math.abs(dz - 1.5) < 0.1 && Math.abs(dy + 0.5) < 0.1) {
         setIsZooming(false);
@@ -84,8 +110,8 @@ export function Island({
       const cameraLag = 0.08;
 
       // Calculate camera position that orbits with the robot
-      const robotAngle = Math.atan2(robotX, robotZ); // Get robot's current angle
-      const cameraAngle = robotAngle; // Camera stays behind robot (add PI to face opposite)
+      const robotAngle = Math.atan2(robotX, robotZ);
+      const cameraAngle = robotAngle;
 
       // Calculate camera position in orbit
       const targetCameraX = robotX + Math.sin(cameraAngle) * cameraDistance;
@@ -97,8 +123,23 @@ export function Island({
       camera.position.y += (targetCameraY - camera.position.y) * cameraLag;
       camera.position.z += (targetCameraZ - camera.position.z) * cameraLag;
 
-      // Make camera look at robot
-      camera.lookAt(robotX, robotY + 0.1, robotZ);
+      // Simple smooth look-at
+      const lookAtX = robotX;
+      const lookAtY = robotY + 0.1;
+      const lookAtZ = robotZ;
+
+      // Create a temporary target vector for smooth interpolation
+      const currentLookAt =
+        camera.target || new THREE.Vector3(lookAtX, lookAtY, lookAtZ);
+      camera.target = camera.target || currentLookAt;
+
+      // Smoothly interpolate the look-at position
+      camera.target.x += (lookAtX - camera.target.x) * cameraLag;
+      camera.target.y += (lookAtY - camera.target.y) * cameraLag;
+      camera.target.z += (lookAtZ - camera.target.z) * cameraLag;
+
+      // Apply the smoothed look-at
+      camera.lookAt(camera.target);
     }
   });
 
