@@ -7,6 +7,15 @@ import { Robot } from "@/components/Robot";
 import { Button } from "@/components/ui/button";
 import Loader from "@/components/Loader";
 import WorkExperience from "@/components/work_experience/page";
+import Projects from "@/components/projects/page";
+
+// Define the journey steps
+export const JourneySteps = {
+  IDLE: "IDLE",
+  WORK_EXPERIENCE: "WORK_EXPERIENCE",
+  PROJECTS: "PROJECTS",
+  CONTACT: "CONTACT",
+};
 
 export default function Home() {
   const [currentStage, setCurrentStage] = useState(1);
@@ -18,9 +27,8 @@ export default function Home() {
     position: [0, -0.5, 1],
     robotScale: 0.28,
   });
-  const cameraRef = useRef();
-  const [gameStarted, setGameStarted] = useState(false);
-  const [showAbout, setShowAbout] = useState(false);
+  const [currentStep, setCurrentStep] = useState(JourneySteps.IDLE);
+  const [showContent, setShowContent] = useState(false);
 
   useEffect(() => {
     // Handle window resize
@@ -81,7 +89,7 @@ export default function Home() {
             setCurrentStage={setCurrentStage}
             setIsLoading={setIsLoading}
             setIslandAnimationComplete={setIslandAnimationComplete}
-            gameStarted={gameStarted}
+            currentStep={currentStep}
             robotPosition={robotPosition}
           />
 
@@ -89,28 +97,31 @@ export default function Home() {
             scale={dimensions.robotScale}
             islandAnimationComplete={islandAnimationComplete}
             setRobotPosition={setRobotPosition}
-            gameStarted={gameStarted}
-            setShowAbout={setShowAbout}
+            currentStep={currentStep}
+            onMovementComplete={() => setShowContent(true)}
           />
         </Suspense>
       </Canvas>
 
-      {islandAnimationComplete && !gameStarted && (
+      {islandAnimationComplete && currentStep === JourneySteps.IDLE && (
         <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50">
           <Button
             variant="island"
             size="lg"
             className="font-bold text-xl hover:scale-110 transition-all duration-300"
-            onClick={() => {
-              setGameStarted(true);
-            }}
+            onClick={() => setCurrentStep(JourneySteps.WORK_EXPERIENCE)}
           >
             Start
           </Button>
         </div>
       )}
 
-      <WorkExperience isVisible={showAbout} />
+      <WorkExperience
+        isVisible={currentStep === JourneySteps.WORK_EXPERIENCE && showContent}
+      />
+      <Projects
+        isVisible={currentStep === JourneySteps.PROJECTS && showContent}
+      />
     </main>
   );
 }

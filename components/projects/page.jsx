@@ -2,12 +2,12 @@
 import { motion } from "framer-motion";
 import Link from "next/link";
 import Image from "next/image";
-import SkillsGrid from "./SkillsGrid";
+import SkillsGrid from "../work_experience/SkillsGrid";
 import { socialLinks } from "@/constants";
-import ExperienceTimeline from "./Timeline";
+import ExperienceTimeline from "../work_experience/Timeline";
 import { Button } from "../ui/button";
 
-const WorkExperience = ({ isVisible }) => {
+const Projects = ({ isVisible }) => {
   if (!isVisible) return null;
 
   return (
@@ -76,7 +76,6 @@ const WorkExperience = ({ isVisible }) => {
           variant="island"
           className="absolute bottom-8 right-8 px-4 py-2 text-white rounded-md 
                    hover:bg-blue-600 transition-colors shadow-lg z-10"
-          onClick={() => setCurrentStep(JourneySteps.PROJECTS)}
         >
           Continue
         </Button>
@@ -85,4 +84,4 @@ const WorkExperience = ({ isVisible }) => {
   );
 };
 
-export default WorkExperience;
+export default Projects;

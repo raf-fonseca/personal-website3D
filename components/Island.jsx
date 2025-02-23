@@ -4,12 +4,13 @@ import { useGLTF } from "@react-three/drei";
 import { useFrame, useThree } from "@react-three/fiber";
 import { a } from "@react-spring/three";
 import * as THREE from "three";
+import { JourneySteps } from "@/app/page";
 
 export function Island({
   setCurrentStage,
   setIsLoading,
   setIslandAnimationComplete,
-  gameStarted,
+  currentStep,
   robotPosition,
   ...props
 }) {
@@ -101,7 +102,7 @@ export function Island({
 
   // Island rotation and camera following
   useFrame(() => {
-    if (gameStarted) {
+    if (currentStep === JourneySteps.WORK_EXPERIENCE) {
       const [robotX, robotY, robotZ] = robotPosition;
 
       // Camera settings
@@ -140,6 +141,28 @@ export function Island({
 
       // Apply the smoothed look-at
       camera.lookAt(camera.target);
+    } else if (currentStep === JourneySteps.PROJECTS) {
+      // Camera settings
+      const cameraDistance = 1.2;
+      const cameraHeight = 0.3;
+      const cameraLag = 0.08;
+
+      // Calculate camera position that orbits with the robot
+      const robotAngle = Math.atan2(robotX, robotZ);
+      const cameraAngle = robotAngle;
+
+      // Calculate camera position in orbit
+      const targetCameraX = robotX + Math.sin(cameraAngle) * cameraDistance;
+      const targetCameraY = robotY + cameraHeight;
+      const targetCameraZ = robotZ + Math.cos(cameraAngle) * cameraDistance;
+
+      // Smooth camera movement
+      camera.position.x += (targetCameraX - camera.position.x) * cameraLag;
+      camera.position.y += (targetCameraY - camera.position.y) * cameraLag;
+      camera.position.z += (targetCameraZ - camera.position.z) * cameraLag;
+
+      // Simple smooth look-at
+      camera.lookAt(robotX, robotY + 0.1, robotZ);
     }
   });
 

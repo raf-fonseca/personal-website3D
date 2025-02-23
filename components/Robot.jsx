@@ -3,12 +3,13 @@ import { useRef, useEffect, useState } from "react";
 import { useGLTF, useAnimations } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import { useSpring, animated } from "@react-spring/three";
+import { JourneySteps } from "@/app/page";
 
 export function Robot({
   islandAnimationComplete,
   setRobotPosition,
-  gameStarted,
-  setShowAbout,
+  currentStep,
+  onMovementComplete,
   ...props
 }) {
   const group = useRef();
@@ -17,7 +18,6 @@ export function Robot({
   const rotationProgressRef = useRef(0);
   const isMovingForward = useRef(false);
   const [movementPhase, setMovementPhase] = useState("initial");
-  const targetPositionZ = useRef(0.6);
   const initialY = -0.35;
   const targetY = 0.1; // Higher position
 
@@ -39,6 +39,17 @@ export function Robot({
 
   // Add this to track current position
   const currentPosition = useRef({ x: 0, y: initialY, z: 0 });
+
+  useEffect(() => {
+    if (currentStep !== JourneySteps.IDLE && movementPhase === "initial") {
+      // Start movement after a small delay when entering a new step
+      setTimeout(() => {
+        setMovementPhase("movingUp");
+        isMovingForward.current = true;
+        rotationProgressRef.current = 0;
+      }, 500);
+    }
+  }, [currentStep, movementPhase]);
 
   useFrame(() => {
     if (!islandAnimationComplete) {
@@ -79,21 +90,10 @@ export function Robot({
       if (rotationProgressRef.current >= Math.PI) {
         setMovementPhase("turningBack");
         isMovingForward.current = false;
-        setShowAbout(true);
+        onMovementComplete(); // Signal that movement is complete
       }
     }
   });
-
-  useEffect(() => {
-    if (gameStarted && movementPhase === "initial") {
-      // Add a small delay before starting the upward movement
-      setTimeout(() => {
-        setMovementPhase("movingUp");
-        isMovingForward.current = true;
-        rotationProgressRef.current = 0; // Reset rotation for the upward spiral
-      }, 500); // 100ms delay
-    }
-  }, [gameStarted, movementPhase]);
 
   // Animation setup
   useEffect(() => {
