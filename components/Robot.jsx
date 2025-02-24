@@ -3,15 +3,15 @@ import { useRef, useEffect, useState } from "react";
 import { useGLTF, useAnimations } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import { useSpring, animated } from "@react-spring/three";
-import { JourneySteps } from "@/app/page";
+import { Steps, useStep } from "@/contexts/StepContext";
 
 export function Robot({
   islandAnimationComplete,
   setRobotPosition,
-  currentStep,
   onMovementComplete,
   ...props
 }) {
+  const { currentStep } = useStep();
   const group = useRef();
   const { scene, animations } = useGLTF("/3D/robot.glb");
   const { actions } = useAnimations(animations, group);
@@ -20,6 +20,7 @@ export function Robot({
   const [movementPhase, setMovementPhase] = useState("initial");
   const initialY = -0.35;
   const targetY = 0.1; // Higher position
+  const workExperienceTarget = Math.PI;
 
   // Spring for smooth rotation and tilt
   const { rotation } = useSpring({
@@ -41,8 +42,14 @@ export function Robot({
   const currentPosition = useRef({ x: 0, y: initialY, z: 0 });
 
   useEffect(() => {
-    if (currentStep !== JourneySteps.IDLE && movementPhase === "initial") {
+    if (currentStep === Steps.WORK_EXPERIENCE && movementPhase === "initial") {
       // Start movement after a small delay when entering a new step
+      setTimeout(() => {
+        setMovementPhase("movingUp");
+        isMovingForward.current = true;
+        rotationProgressRef.current = 0;
+      }, 500);
+    } else if (currentStep === Steps.PROJECTS && movementPhase === "initial") {
       setTimeout(() => {
         setMovementPhase("movingUp");
         isMovingForward.current = true;
@@ -55,7 +62,7 @@ export function Robot({
     if (!islandAnimationComplete) {
       // Initial circular movement
       if (rotationProgressRef.current < Math.PI * 2) {
-        const radius = 0.45;
+        const radius = 0.4;
         const angle = rotationProgressRef.current;
         const x = Math.sin(angle) * radius;
         const z = Math.cos(angle) * radius;
@@ -76,12 +83,24 @@ export function Robot({
       // Game started movement
       rotationProgressRef.current += 0.02;
 
-      const radius = 0.45;
+      const radius = 0.4;
       const x = Math.sin(rotationProgressRef.current) * radius;
       const z = Math.cos(rotationProgressRef.current) * radius;
 
-      const progress = Math.min(rotationProgressRef.current / (Math.PI * 2), 1);
-      const y = initialY + (targetY - initialY) * progress;
+      let y;
+      if (currentStep === Steps.WORK_EXPERIENCE) {
+        const progress = Math.min(
+          rotationProgressRef.current / (Math.PI * 2),
+          1
+        );
+        y = initialY + (targetY - initialY) * progress;
+      } else {
+        const progress = Math.min(
+          rotationProgressRef.current / (Math.PI / 2),
+          1
+        );
+        y = initialY + (targetY - initialY) * progress;
+      }
 
       currentPosition.current = { x, y, z };
       group.current.position.set(x, y, z);

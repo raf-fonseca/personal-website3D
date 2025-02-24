@@ -1,4 +1,5 @@
 import "./globals.css";
+import { StepProvider } from "../contexts/StepContext";
 
 export const metadata = {
   title: "Create Next App",
@@ -8,7 +9,9 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className={`antialiased`}>{children}</body>
+      <body className={`antialiased`}>
+        <StepProvider>{children}</StepProvider>
+      </body>
     </html>
   );
 }

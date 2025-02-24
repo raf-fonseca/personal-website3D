@@ -4,18 +4,17 @@ import { useGLTF } from "@react-three/drei";
 import { useFrame, useThree } from "@react-three/fiber";
 import { a } from "@react-spring/three";
 import * as THREE from "three";
-import { JourneySteps } from "@/app/page";
+import { Steps, useStep } from "@/contexts/StepContext";
 
 export function Island({
-  setCurrentStage,
   setIsLoading,
   setIslandAnimationComplete,
-  currentStep,
   robotPosition,
   ...props
 }) {
+  const { currentStep } = useStep();
   const { scene } = useGLTF("/3D/Fantasy Island 3D Model.glb");
-  const { gl, camera } = useThree();
+  const { camera } = useThree();
   const islandRef = useRef();
   const rotationProgressRef = useRef(0);
   const [isZooming, setIsZooming] = useState(true);
@@ -24,8 +23,6 @@ export function Island({
   const targetCameraPosition = useRef([0, -0.2, 1.1]);
   const initialCameraRotation = useRef(-Math.PI / 3);
   const targetCameraRotation = useRef(0);
-  const cameraOffset = useRef({ x: 0, y: 0.5, z: 2 });
-  const islandRotationRef = useRef(Math.PI); // Initial rotation
 
   // Enable shadows for all meshes in the scene
   scene.traverse((child) => {
@@ -102,7 +99,7 @@ export function Island({
 
   // Island rotation and camera following
   useFrame(() => {
-    if (currentStep === JourneySteps.WORK_EXPERIENCE) {
+    if (currentStep === Steps.WORK_EXPERIENCE) {
       const [robotX, robotY, robotZ] = robotPosition;
 
       // Camera settings
@@ -141,28 +138,6 @@ export function Island({
 
       // Apply the smoothed look-at
       camera.lookAt(camera.target);
-    } else if (currentStep === JourneySteps.PROJECTS) {
-      // Camera settings
-      const cameraDistance = 1.2;
-      const cameraHeight = 0.3;
-      const cameraLag = 0.08;
-
-      // Calculate camera position that orbits with the robot
-      const robotAngle = Math.atan2(robotX, robotZ);
-      const cameraAngle = robotAngle;
-
-      // Calculate camera position in orbit
-      const targetCameraX = robotX + Math.sin(cameraAngle) * cameraDistance;
-      const targetCameraY = robotY + cameraHeight;
-      const targetCameraZ = robotZ + Math.cos(cameraAngle) * cameraDistance;
-
-      // Smooth camera movement
-      camera.position.x += (targetCameraX - camera.position.x) * cameraLag;
-      camera.position.y += (targetCameraY - camera.position.y) * cameraLag;
-      camera.position.z += (targetCameraZ - camera.position.z) * cameraLag;
-
-      // Simple smooth look-at
-      camera.lookAt(robotX, robotY + 0.1, robotZ);
     }
   });
 
