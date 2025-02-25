@@ -99,7 +99,10 @@ export function Island({
 
   // Island rotation and camera following
   useFrame(() => {
-    if (currentStep === Steps.WORK_EXPERIENCE) {
+    if (
+      currentStep === Steps.WORK_EXPERIENCE ||
+      currentStep === Steps.PROJECTS
+    ) {
       const [robotX, robotY, robotZ] = robotPosition;
 
       // Camera settings

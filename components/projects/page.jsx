@@ -25,48 +25,9 @@ const Projects = ({ isVisible }) => {
             {/* Header Section */}
             <section className="space-y-4 ">
               <h1 className="text-5xl font-bold text-black dark:text-white ">
-                Hi, I&apos;m{" "}
-                <span className="gradient-text inline-block">Rafael</span>
+                <span className="gradient-text inline-block">PROJECTS</span>
               </h1>
-              <p className="text-lg text-muted-foreground ">
-                I am a Software Developer studying Computer Engineering at the
-                University of Waterloo. My passion for learning has led me to
-                explore full-stack development, neural networks, and virtual
-                reality.
-              </p>
-              <div className="flex justify-center gap-4">
-                {socialLinks.map((social) => (
-                  <Link
-                    key={social.name}
-                    href={social.link}
-                    className="hover:opacity-80 transition-opacity"
-                  >
-                    <Image
-                      src={social.iconUrl}
-                      alt={social.name}
-                      width={24}
-                      height={24}
-                    />
-                    <span className="sr-only">{social.name}</span>
-                  </Link>
-                ))}
-              </div>
-            </section>
-
-            {/* Skills Section */}
-            <section className="space-y-8">
-              <h2 className="text-3xl font-bold text-black dark:text-white">
-                Skills
-              </h2>
-              <SkillsGrid />
-            </section>
-
-            {/* Work Experience Section */}
-            <section className="space-y-8">
-              <h2 className="text-3xl font-bold text-black dark:text-white">
-                Work Experience
-              </h2>
-              <ExperienceTimeline />
+              <p className="text-lg text-muted-foreground ">AHHHHH</p>
             </section>
           </main>
         </div>

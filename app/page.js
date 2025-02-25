@@ -21,7 +21,10 @@ export default function Home() {
     position: [0, -0.5, 1],
     robotScale: 0.28,
   });
-  const [showContent, setShowContent] = useState(false);
+  const [movementComplete, setMovementComplete] = useState({
+    workExperience: false,
+    projects: false,
+  });
 
   useEffect(() => {
     // Handle window resize
@@ -88,7 +91,18 @@ export default function Home() {
             scale={dimensions.robotScale}
             islandAnimationComplete={islandAnimationComplete}
             setRobotPosition={setRobotPosition}
-            onMovementComplete={() => setShowContent(true)}
+            onWorkExperienceComplete={() =>
+              setMovementComplete({
+                ...movementComplete,
+                workExperience: true,
+              })
+            }
+            onProjectsComplete={() =>
+              setMovementComplete({
+                ...movementComplete,
+                projects: true,
+              })
+            }
           />
         </Suspense>
       </Canvas>
@@ -107,9 +121,14 @@ export default function Home() {
       )}
 
       <WorkExperience
-        isVisible={currentStep === Steps.WORK_EXPERIENCE && showContent}
+        isVisible={
+          currentStep === Steps.WORK_EXPERIENCE &&
+          movementComplete.workExperience
+        }
       />
-      <Projects isVisible={currentStep === Steps.PROJECTS && showContent} />
+      <Projects
+        isVisible={currentStep === Steps.PROJECTS && movementComplete.projects}
+      />
     </main>
   );
 }
