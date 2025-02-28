@@ -25,14 +25,26 @@ function App() {
       {/* Canvas taking up the entire screen */}
       <KeyboardControls map={keyboardMap}>
         <Canvas
-          shadows
+          shadows={{ type: "PCFSoftShadowMap", enabled: true }}
+          dpr={[1, 2]}
           camera={{ position: [0, 80, -100], near: 0.1, fov: 40 }}
+          gl={{
+            antialias: true,
+            alpha: false,
+            stencil: false,
+            depth: true,
+            powerPreference: "high-performance",
+          }}
           style={{
             touchAction: "none",
+            background:
+              "linear-gradient(to bottom, #94c5f8 0%, #a7daf9 26%, #b6dfff 59%, #daefff 100%)",
           }}
           className="w-full h-full"
+          performance={{ min: 0.5 }}
         >
-          <color attach="background" args={["#000000"]} />
+          {/* Set a bright sky blue background */}
+          <color attach="background" args={["#87CEEB"]} />
           <Experience />
         </Canvas>
       </KeyboardControls>
