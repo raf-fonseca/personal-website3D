@@ -6,7 +6,7 @@ import { createContext, useContext, useState, useEffect } from "react";
 const CoinContext = createContext();
 
 // Total number of coins in the game
-const TOTAL_COINS = 12;
+const TOTAL_COINS = 20;
 
 // Provider component
 export function CoinProvider({ children }) {
