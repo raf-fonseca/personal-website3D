@@ -1,134 +1,43 @@
 "use client";
-import { Suspense, useState, useRef, useEffect } from "react";
+import { KeyboardControls } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
-import { Environment, Sky } from "@react-three/drei";
-import { Island } from "@/components/Island";
-import { Robot } from "@/components/Robot";
-import { Button } from "@/components/ui/button";
-import Loader from "@/components/Loader";
-import WorkExperience from "@/components/work_experience/page";
-import Projects from "@/components/projects/page";
-import { Steps, useStep } from "../contexts/StepContext";
+import { Experience } from "@/components/Experience";
+import Navbar from "@/components/Navbar";
 
-export default function Home() {
-  const { currentStep, setCurrentStep } = useStep();
-  const [currentStage, setCurrentStage] = useState(1);
-  const [isLoading, setIsLoading] = useState(true);
-  const [islandAnimationComplete, setIslandAnimationComplete] = useState(false);
-  const [robotPosition, setRobotPosition] = useState([0, -0.35, 0.6]);
-  const [dimensions, setDimensions] = useState({
-    scale: 0.01,
-    position: [0, -0.5, 1],
-    robotScale: 0.28,
-  });
-  const [movementComplete, setMovementComplete] = useState({
-    workExperience: false,
-    projects: false,
-  });
+const keyboardMap = [
+  { name: "forward", keys: ["ArrowUp", "KeyW"] },
+  { name: "backward", keys: ["ArrowDown", "KeyS"] },
+  { name: "left", keys: ["ArrowLeft", "KeyA"] },
+  { name: "right", keys: ["ArrowRight", "KeyD"] },
+  { name: "up", keys: ["Space"] },
+  { name: "down", keys: ["ShiftLeft", "KeyC"] },
+  { name: "run", keys: ["ShiftRight"] },
+];
 
-  useEffect(() => {
-    // Handle window resize
-    const adjustSizes = () => {
-      if (window.innerWidth < 768) {
-        setDimensions({
-          scale: 0.008,
-          position: [0, -2.5, 0],
-          robotScale: 0.06,
-        });
-      } else {
-        setDimensions({
-          scale: 0.01,
-          position: [0, -0.5, 0],
-          robotScale: 0.12,
-        });
-      }
-    };
-
-    // Initial adjustment
-    adjustSizes();
-
-    // Add resize listener
-    window.addEventListener("resize", adjustSizes);
-    return () => window.removeEventListener("resize", adjustSizes);
-  }, []);
-
+function App() {
   return (
-    <main className="w-screen h-screen overflow-hidden relative">
-      <Canvas
-        camera={{
-          fov: 45,
-          near: 0.1,
-          far: 2000,
-        }}
-        className="w-full h-full bg-transparent absolute"
-        shadows
-      >
-        <Suspense fallback={<Loader />}>
-          <Sky
-            sunPosition={[500, 180, -1000]}
-            turbidity={0.05}
-            rayleigh={1.5}
-            mieCoefficient={0.002}
-            mieDirectionalG={0.8}
-            azimuth={0.25}
-            exposure={0.5}
-          />
-          <Environment preset="sunset" />
+    <div className="relative w-full h-screen overflow-hidden">
+      {/* Navbar positioned absolutely at the top */}
+      <div className="absolute top-0 left-0 right-0 z-50">
+        <Navbar />
+      </div>
 
-          <ambientLight intensity={0.3} color="#ffffff" />
-
-          <pointLight position={[-5, 3, -5]} intensity={0.2} color="#ffffff" />
-
-          <Island
-            scale={dimensions.scale}
-            position={dimensions.position}
-            setIsLoading={setIsLoading}
-            setIslandAnimationComplete={setIslandAnimationComplete}
-            robotPosition={robotPosition}
-          />
-
-          <Robot
-            scale={dimensions.robotScale}
-            islandAnimationComplete={islandAnimationComplete}
-            setRobotPosition={setRobotPosition}
-            onWorkExperienceComplete={() =>
-              setMovementComplete({
-                ...movementComplete,
-                workExperience: true,
-              })
-            }
-            onProjectsComplete={() =>
-              setMovementComplete({
-                ...movementComplete,
-                projects: true,
-              })
-            }
-          />
-        </Suspense>
-      </Canvas>
-
-      {islandAnimationComplete && currentStep === Steps.IDLE && (
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50">
-          <Button
-            variant="island"
-            size="lg"
-            className="font-bold text-xl hover:scale-110 transition-all duration-300"
-            onClick={() => setCurrentStep(Steps.WORK_EXPERIENCE)}
-          >
-            Start
-          </Button>
-        </div>
-      )}
-
-      <WorkExperience
-        isVisible={
-          currentStep === Steps.WORK_EXPERIENCE &&
-          movementComplete.workExperience
-        }
-      />
-      <Projects
-        isVisible={currentStep === Steps.PROJECTS && movementComplete.projects}
-      />
-    </main>
+      {/* Canvas taking up the entire screen */}
+      <KeyboardControls map={keyboardMap}>
+        <Canvas
+          shadows
+          camera={{ position: [0, 80, -100], near: 0.1, fov: 40 }}
+          style={{
+            touchAction: "none",
+          }}
+          className="w-full h-full"
+        >
+          <color attach="background" args={["#000000"]} />
+          <Experience />
+        </Canvas>
+      </KeyboardControls>
+    </div>
   );
 }
+
+export default App;

@@ -2,7 +2,7 @@
 import { useRef, useEffect, useState } from "react";
 import { useGLTF, useAnimations } from "@react-three/drei";
 import { useFrame, useThree } from "@react-three/fiber";
-import { useSpring, animated } from "@react-spring/three";
+import { useSpring, animated, config } from "@react-spring/three";
 import { Steps, useStep } from "@/contexts/StepContext";
 
 export function Robot({
@@ -20,13 +20,15 @@ export function Robot({
   const rotationProgressRef = useRef(0);
   const isMovingForward = useRef(false);
   const [movementPhase, setMovementPhase] = useState("initial");
+  const [isLoading, setIsLoading] = useState(false);
+  const loadingTransitionRef = useRef(0); // For smooth transition
   const initialY = -0.35;
   const targetY = 0.1; // Higher position for work experience
   const projectsTargetY = -0.1; // Lower target for projects phase
   const lastPosition = useRef({ x: 0, y: initialY, z: 0 });
 
-  // Spring for smooth rotation and tilt
-  const { rotation } = useSpring({
+  // Spring for smooth rotation and tilt with better transition
+  const { rotation, scale } = useSpring({
     rotation: [
       isMovingForward.current ? 0.2 : 0, // X-axis tilt
       movementPhase === "initial"
@@ -40,6 +42,7 @@ export function Robot({
         : 0,
       0,
     ],
+    scale: isLoading ? [1.05, 1.05, 1.05] : [1, 1, 1],
     config: { mass: 1, tension: 180, friction: 12 },
   });
 
@@ -76,30 +79,77 @@ export function Robot({
 
   useEffect(() => {
     if (currentStep === Steps.WORK_EXPERIENCE && movementPhase === "initial") {
-      // Start movement after a small delay when entering a new step
+      // Start loading animation
+      setIsLoading(true);
+      loadingTransitionRef.current = 0;
+
+      // Start movement after a delay
       setTimeout(() => {
+        // Don't immediately stop loading - we'll fade it out in the animation frame
+        rotationProgressRef.current = 0;
         setMovementPhase("workExperience");
         isMovingForward.current = true;
-        rotationProgressRef.current = 0;
-      }, 500);
+      }, 1000); // Longer delay to show the loading animation
     } else if (
       currentStep === Steps.PROJECTS &&
       (movementPhase === "turningBack" || movementPhase === "completed")
     ) {
-      // Start projects phase from where work experience ended
       // Only restart if we're not already in the completed state
       if (movementPhase !== "completed") {
+        // Start loading animation
+        setIsLoading(true);
+        loadingTransitionRef.current = 0;
+
         setTimeout(() => {
-          setMovementPhase("projects");
-          isMovingForward.current = true;
           // Start from the current position
           rotationProgressRef.current = Math.PI;
-        }, 500);
+          setMovementPhase("projects");
+          isMovingForward.current = true;
+        }, 1000); // Longer delay to show the loading animation
       }
     }
   }, [currentStep, movementPhase]);
 
-  useFrame(() => {
+  // Add a floating animation during loading state
+  const loadingAnimationRef = useRef(0);
+
+  useFrame((state, delta) => {
+    // Handle loading animation with smooth transition
+    if (isLoading) {
+      // If we're in a movement phase, start transitioning out of loading
+      if (movementPhase === "workExperience" || movementPhase === "projects") {
+        loadingTransitionRef.current += delta * 2; // Control transition speed
+        if (loadingTransitionRef.current >= 1) {
+          setIsLoading(false);
+          loadingTransitionRef.current = 0;
+        }
+      }
+
+      // Calculate loading animation intensity based on transition
+      const transitionFactor = 1 - Math.min(loadingTransitionRef.current, 1);
+
+      // Instead of bobbing, just move upward by a small amount
+      // Start with a small lift that increases over time, then decreases during transition
+      const liftProgress = Math.min(loadingAnimationRef.current * 0.5, 1); // Ramp up the lift
+      const liftAmount = 0.05 * liftProgress * transitionFactor; // Max lift of 0.05 units
+
+      // Apply the upward motion that fades out during transition
+      if (group.current) {
+        // Only apply loading animation if not in a movement phase or still transitioning
+        if (
+          movementPhase === "initial" ||
+          movementPhase === "turningBack" ||
+          movementPhase === "completed" ||
+          transitionFactor > 0
+        ) {
+          group.current.position.y = currentPosition.current.y + liftAmount;
+        }
+      }
+
+      // Increment the loading animation timer
+      loadingAnimationRef.current += delta * 3;
+    }
+
     if (!islandAnimationComplete) {
       // Initial circular movement
       if (rotationProgressRef.current < Math.PI * 2) {
