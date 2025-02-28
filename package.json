@@ -13,7 +13,9 @@
     "@react-spring/three": "^9.7.5",
     "@react-three/drei": "^9.92.7",
     "@react-three/fiber": "^8.15.12",
+    "@react-three/rapier": "^1.5.0",
     "@types/react-vertical-timeline-component": "^3.3.6",
+    "canvas-confetti": "^1.9.3",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "framer-motion": "^12.4.3",
@@ -28,11 +30,11 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
+    "@types/react-vertical-timeline-component": "^3.3.6",
     "autoprefixer": "^10.4.16",
     "eslint": "^8",
     "eslint-config-next": "14.0.4",
     "postcss": "^8.4.31",
-    "tailwindcss": "^3.3.0",
-    "@types/react-vertical-timeline-component": "^3.3.6"
+    "tailwindcss": "^3.3.0"
   }
 }

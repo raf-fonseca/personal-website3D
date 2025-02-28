@@ -4,6 +4,7 @@ import { RigidBody } from "@react-three/rapier";
 import { useEffect, useRef, useState, useMemo } from "react";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
+import { useCoins } from "../contexts/CoinContext";
 
 // Load the coin model once
 const CoinModel = () => {
@@ -12,7 +13,13 @@ const CoinModel = () => {
 };
 
 // Single coin component
-const Coin = ({ position, scale = 0.1, rotation = [0, 0, 0], collected }) => {
+const Coin = ({
+  position,
+  scale = 0.1,
+  rotation = [0, 0, 0],
+  collected,
+  id,
+}) => {
   // Get the original model
   const { scene: originalScene, animations } = useMemo(() => CoinModel(), []);
 
@@ -106,7 +113,7 @@ const Coin = ({ position, scale = 0.1, rotation = [0, 0, 0], collected }) => {
 
 // Main component to manage multiple coins
 export const Coins = () => {
-  const [collectedCoins, setCollectedCoins] = useState([]);
+  const { collectedCoins, collectCoin } = useCoins();
 
   // Predefined coin positions
   const coinPositions = [
@@ -123,14 +130,6 @@ export const Coins = () => {
     [12, 53.786, 35.436],
     [-10, 53.786, 40.436],
   ];
-
-  // Handle coin collection
-  const handleCoinCollect = (id) => {
-    if (!collectedCoins.includes(id)) {
-      setCollectedCoins((prev) => [...prev, id]);
-      console.log(`Coin ${id} collected!`);
-    }
-  };
 
   return (
     <group>
@@ -150,7 +149,8 @@ export const Coins = () => {
                 e.other.rigidBodyObject?.name === "character" &&
                 !isCollected
               ) {
-                handleCoinCollect(index);
+                collectCoin(index);
+                console.log(`Coin ${index} collected!`);
               }
             }}
           >
