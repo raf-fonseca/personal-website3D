@@ -7,6 +7,7 @@ import { CharacterController } from "./CharacterController";
 import { Coins } from "./Coins";
 import { useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
+import WelcomeSign from "./WelcomeSign";
 
 // Sun component with glow effect
 const Sun = ({ position = [-500, 500, -300], size = 15 }) => {
@@ -79,6 +80,14 @@ export const Experience = () => {
 
       {/* Sun visual element */}
       <Sun />
+
+      {/* Welcome Sign - positioned near the starting point */}
+      <WelcomeSign
+        position={[8, 25.5, 21]}
+        scale={2} // Adjust this value to change the overall size
+        width={10} // Adjust this to change the sign width
+        height={3} // Adjust this to change the sign height
+      />
 
       {/* Main directional light (sun light) */}
       <directionalLight

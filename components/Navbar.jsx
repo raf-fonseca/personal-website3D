@@ -60,7 +60,11 @@ export default function Navbar() {
         <div className="grid grid-cols-3 items-center gap-3 sm:gap-6">
           {/* Logo */}
           <div className="flex items-center justify-start">
-            <Button variant="island">R</Button>
+            <div className="w-14 h-12 rounded-xl flex items-center justify-center bg-gradient-to-r from-[#4caf50] to-[#8bc34a] shadow-lg hover:shadow-xl transition-shadow duration-300">
+              <span className="text-lg sm:text-xl font-bold text-white">
+                RF
+              </span>
+            </div>
           </div>
 
           {/* Progress section - centered */}
