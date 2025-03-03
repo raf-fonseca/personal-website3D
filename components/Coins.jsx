@@ -158,7 +158,6 @@ export const Coins = () => {
                 !isCollected
               ) {
                 collectCoin(index);
-                console.log(`Coin ${index} collected!`);
               }
             }}
           >

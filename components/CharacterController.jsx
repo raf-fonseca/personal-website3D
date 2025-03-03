@@ -32,7 +32,7 @@ export const CharacterController = () => {
   // Fixed values instead of controls
   const FLIGHT_SPEED = 30;
   const VERTICAL_SPEED = 20;
-  const ROTATION_SPEED = degToRad(40.107);
+  const ROTATION_SPEED = degToRad(30);
   const TILT_ANGLE = degToRad(15);
   const TILT_SPEED = 0.1;
   const MOVEMENT_SMOOTHING = 0.05;
@@ -210,13 +210,13 @@ export const CharacterController = () => {
       angularDamping={0.95}
     >
       <group ref={container}>
-        <group ref={cameraTarget} position-z={5.5} />
+        <group ref={cameraTarget} position-z={50} />
         <group ref={cameraPosition} position-y={30} position-z={-50} />
         <group ref={character}>
-          <Character position={[0, 0, 0]} rotation={[0, 0, 0]} scale={12} />
+          <Character position={[0, 5, 0]} rotation={[0, 0, 0]} scale={12} />
         </group>
       </group>
-      <CapsuleCollider args={[1.8, 1.8]} position={[0, 3, 0]} />
+      <CapsuleCollider args={[1.8, 1.8]} position={[0, 8, 0]} />
     </RigidBody>
   );
 };

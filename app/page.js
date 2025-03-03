@@ -3,6 +3,8 @@ import { KeyboardControls } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
 import { Experience } from "@/components/Experience";
 import Navbar from "@/components/Navbar";
+import WorkExperience from "@/components/work_experience/page";
+import { useState } from "react";
 
 const keyboardMap = [
   { name: "forward", keys: ["ArrowUp", "KeyW"] },
@@ -15,12 +17,23 @@ const keyboardMap = [
 ];
 
 function App() {
+  const [showWorkExperience, setShowWorkExperience] = useState(false);
+
+  const handleWorkExperienceChange = (value) => {
+    setShowWorkExperience(value);
+  };
+
   return (
     <div className="relative w-full h-screen overflow-hidden">
       {/* Navbar positioned absolutely at the top */}
       <div className="absolute top-0 left-0 right-0 z-50">
         <Navbar />
       </div>
+
+      {/* Work Experience Overlay */}
+      {showWorkExperience && (
+        <WorkExperience onWorkExperienceChange={handleWorkExperienceChange} />
+      )}
 
       {/* Canvas taking up the entire screen */}
       <KeyboardControls map={keyboardMap}>
@@ -45,7 +58,7 @@ function App() {
         >
           {/* Set a bright sky blue background */}
           <color attach="background" args={["#87CEEB"]} />
-          <Experience />
+          <Experience onWorkExperienceChange={handleWorkExperienceChange} />
         </Canvas>
       </KeyboardControls>
     </div>

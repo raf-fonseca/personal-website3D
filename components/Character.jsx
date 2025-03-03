@@ -7,7 +7,6 @@ export const Character = ({ ...props }) => {
   const { scene, animations } = useGLTF("/3D/Robot.glb");
   const group = useRef();
   const { actions } = useAnimations(animations, group);
-  console.log(actions);
   // Animation
   useEffect(() => {
     const animation = actions["Take 001"];

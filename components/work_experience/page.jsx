@@ -5,13 +5,28 @@ import Image from "next/image";
 import SkillsGrid from "./SkillsGrid";
 import { socialLinks } from "@/constants";
 import ExperienceTimeline from "./Timeline";
-import { Button } from "../ui/button";
-import { Steps, useStep } from "@/contexts/StepContext";
+import { useEffect } from "react";
+import { X } from "lucide-react";
+import PropTypes from "prop-types";
 
-const WorkExperience = ({ isVisible }) => {
-  const { setCurrentStep } = useStep();
+const WorkExperience = ({ onWorkExperienceChange }) => {
+  // Handle escape key press
+  useEffect(() => {
+    const handleEscape = (e) => {
+      if (e.key === "Escape" && typeof onWorkExperienceChange === "function") {
+        onWorkExperienceChange(false);
+      }
+    };
 
-  if (!isVisible) return null;
+    window.addEventListener("keydown", handleEscape);
+    return () => window.removeEventListener("keydown", handleEscape);
+  }, [onWorkExperienceChange]);
+
+  const handleClose = () => {
+    if (typeof onWorkExperienceChange === "function") {
+      onWorkExperienceChange(false);
+    }
+  };
 
   return (
     <div className="fixed inset-0 flex justify-center z-50 pt-10">
@@ -22,6 +37,16 @@ const WorkExperience = ({ isVisible }) => {
         className="relative bg-white/90 dark:bg-black/90 rounded-xl shadow-xl 
                   max-w-6xl w-[90%] backdrop-blur-sm mx-4 max-h-[80vh]"
       >
+        {/* Close button */}
+        <button
+          onClick={handleClose}
+          className="absolute top-4 right-4 p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-800 
+                     transition-colors duration-200 z-50"
+          aria-label="Close work experience"
+        >
+          <X className="w-6 h-6 text-gray-600 dark:text-gray-300" />
+        </button>
+
         {/* Scrollable content */}
         <div className="overflow-y-auto max-h-[80vh]">
           <main className="w-full max-w-6xl mx-auto px-8 py-8 space-y-16">
@@ -29,13 +54,13 @@ const WorkExperience = ({ isVisible }) => {
             <section className="space-y-4 ">
               <h1 className="text-5xl font-bold text-black dark:text-white ">
                 Hi, I&apos;m{" "}
-                <span className="gradient-text inline-block">Rafael</span>
+                <span className="gradient-text inline-block">Raf</span>
               </h1>
               <p className="text-lg text-muted-foreground ">
                 I am a Software Developer studying Computer Engineering at the
                 University of Waterloo. My passion for learning has led me to
-                explore full-stack development, neural networks, and virtual
-                reality.
+                explore virtual reality, neural networks, and full-stack
+                development.
               </p>
               <div className="flex justify-center gap-4">
                 {socialLinks.map((social) => (
@@ -73,19 +98,13 @@ const WorkExperience = ({ isVisible }) => {
             </section>
           </main>
         </div>
-
-        {/* Button outside of scrollable area */}
-        <Button
-          variant="island"
-          className="absolute bottom-8 right-8 px-4 py-2 text-white rounded-md 
-                   hover:bg-blue-600 transition-colors shadow-lg z-10"
-          onClick={() => setCurrentStep(Steps.PROJECTS)}
-        >
-          Continue
-        </Button>
       </motion.div>
     </div>
   );
+};
+
+WorkExperience.propTypes = {
+  onWorkExperienceChange: PropTypes.func.isRequired,
 };
 
 export default WorkExperience;
