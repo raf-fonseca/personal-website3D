@@ -1,5 +1,10 @@
 "use client";
-import React, { useRef, useEffect } from "react";
+import React, {
+  useRef,
+  useEffect,
+  forwardRef,
+  useImperativeHandle,
+} from "react";
 import { Environment, OrthographicCamera, Sphere } from "@react-three/drei";
 import { Map } from "./Map";
 import { Physics } from "@react-three/rapier";
@@ -52,10 +57,26 @@ const Sun = ({ position = [-500, 500, -300], size = 15 }) => {
   );
 };
 
-export const Experience = ({ onWorkExperienceChange }) => {
+export const Experience = forwardRef(({ onWorkExperienceChange }, ref) => {
   const shadowCameraRef = useRef();
   const lightRef = useRef();
+  const characterRef = useRef();
   const { scene, gl } = useThree();
+
+  // Work experience area position
+  const workExperiencePosition = [18, 35, 85];
+
+  // Expose moveToWorkExperience method
+  useImperativeHandle(ref, () => ({
+    moveToWorkExperience: () => {
+      if (characterRef.current) {
+        const targetPosition = new THREE.Vector3(...workExperiencePosition);
+        characterRef.current.moveToPosition(targetPosition, () => {
+          onWorkExperienceChange(true);
+        });
+      }
+    },
+  }));
 
   // Configure shadow settings for the scene
   useEffect(() => {
@@ -84,7 +105,6 @@ export const Experience = ({ onWorkExperienceChange }) => {
 
       {/* Welcome Sign - positioned near the starting point */}
       <WelcomeSign position={[8, 25.5, 21]} scale={2} width={10} height={3} />
-      <WelcomeSign position={[8, 25.5, 22]} scale={2} width={10} height={3} />
 
       {/* Main directional light (sun light) */}
       <directionalLight
@@ -124,12 +144,12 @@ export const Experience = ({ onWorkExperienceChange }) => {
 
       <Physics debug={false}>
         <Map scale={1} position={[0, 0, 50]} />
-        <CharacterController />
+        <CharacterController ref={characterRef} />
         <Coins />
 
         {/* Work Experience Trigger Area */}
         <WorkExperienceTrigger
-          position={[18, 35, 85]}
+          position={workExperiencePosition}
           size={[30, 20, 30]}
           onEnter={() => {
             console.log("Entered work experience area");
@@ -143,6 +163,6 @@ export const Experience = ({ onWorkExperienceChange }) => {
       </Physics>
     </>
   );
-};
+});
 
 export default Experience;

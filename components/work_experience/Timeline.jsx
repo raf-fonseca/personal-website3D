@@ -56,9 +56,9 @@ const TimelineItem = ({ item, index }) => {
           <p className="text-gray-600 dark:text-gray-300 font-medium">
             {item.company}
           </p>
-          <ul className="mt-4 space-y-2 list-disc list-inside">
+          <ul className="mt-4 pl-4 space-y-2 list-disc ">
             {item.points.map((point, i) => (
-              <li key={i} className="text-gray-600 dark:text-gray-400 text-sm">
+              <li key={i} className="text-gray-600 dark:text-gray-400 mr-4">
                 {point}
               </li>
             ))}
@@ -89,7 +89,7 @@ const TimelineItem = ({ item, index }) => {
               <p className="text-gray-600 dark:text-gray-300 font-medium">
                 {item.company}
               </p>
-              <ul className="mt-4 space-y-2 list-disc list-inside">
+              <ul className="mt-4 pl-4 space-y-2 list-disc ">
                 {item.points.map((point, i) => (
                   <li
                     key={i}
@@ -167,11 +167,11 @@ const TimelineItem = ({ item, index }) => {
               <p className="text-gray-600 dark:text-gray-300 font-medium">
                 {item.company}
               </p>
-              <ul className="mt-4 space-y-2 list-disc list-inside">
+              <ul className="mt-4 pl-4 space-y-2 list-disc ">
                 {item.points.map((point, i) => (
                   <li
                     key={i}
-                    className="text-gray-600 dark:text-gray-400 text-sm"
+                    className="text-gray-600 dark:text-gray-400 text-sm "
                   >
                     {point}
                   </li>

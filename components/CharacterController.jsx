@@ -2,7 +2,13 @@
 import { useKeyboardControls } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import { CapsuleCollider, RigidBody } from "@react-three/rapier";
-import { useRef } from "react";
+import {
+  forwardRef,
+  useRef,
+  useImperativeHandle,
+  useState,
+  useEffect,
+} from "react";
 import { MathUtils, Vector3 } from "three";
 import { degToRad } from "three/src/math/MathUtils.js";
 import { Character } from "./Character";
@@ -28,11 +34,11 @@ const lerpAngle = (start, end, t) => {
   return normalizeAngle(start + (end - start) * t);
 };
 
-export const CharacterController = () => {
+export const CharacterController = forwardRef((props, ref) => {
   // Fixed values instead of controls
-  const FLIGHT_SPEED = 30;
+  const FLIGHT_SPEED = 40;
   const VERTICAL_SPEED = 20;
-  const ROTATION_SPEED = degToRad(30);
+  const ROTATION_SPEED = degToRad(50.107);
   const TILT_ANGLE = degToRad(15);
   const TILT_SPEED = 0.1;
   const MOVEMENT_SMOOTHING = 0.05;
@@ -41,13 +47,13 @@ export const CharacterController = () => {
   const rb = useRef();
   const container = useRef();
   const character = useRef();
+  const [isMovingToTarget, setIsMovingToTarget] = useState(false);
+  const targetPosition = useRef(null);
+  const onReachTarget = useRef(null);
 
   const targetTiltRef = useRef(0);
-
-  // Target velocity for smooth transitions
   const targetVelocity = useRef(new Vector3(0, 0, 0));
   const currentVelocity = useRef(new Vector3(0, 0, 0));
-
   const characterRotationTarget = useRef(0);
   const rotationTarget = useRef(0);
   const cameraTarget = useRef();
@@ -57,44 +63,70 @@ export const CharacterController = () => {
   const cameraLookAt = useRef(new Vector3());
   const [, get] = useKeyboardControls();
 
+  const [fadeOpacity, setFadeOpacity] = useState(0);
+  const fadeTimeout = useRef(null);
+
+  // Expose moveToPosition method
+  useImperativeHandle(ref, () => ({
+    moveToPosition: (position, callback) => {
+      if (rb.current) {
+        // Start fade out
+        setFadeOpacity(1);
+
+        // Wait for fade out, then teleport
+        fadeTimeout.current = setTimeout(() => {
+          // Directly set the position
+          rb.current.setTranslation(position, true);
+
+          // Calculate direction to center (0,0,0)
+          const directionToCenter = new Vector3(0, 0, 0).sub(
+            new Vector3(...position)
+          );
+          const angle = Math.atan2(directionToCenter.x, directionToCenter.z);
+
+          // Set the character and container rotation to face center
+          if (character.current) {
+            character.current.rotation.y = angle;
+            characterRotationTarget.current = angle;
+          }
+          container.current.rotation.y = angle;
+          rotationTarget.current = angle;
+
+          // Start fade in
+          setTimeout(() => {
+            setFadeOpacity(0);
+            // Call the callback after fade in starts
+            if (callback) callback();
+          }, 300);
+        }, 300);
+      }
+    },
+  }));
+
+  // Cleanup timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (fadeTimeout.current) {
+        clearTimeout(fadeTimeout.current);
+      }
+    };
+  }, []);
+
   useFrame(({ camera }) => {
     if (rb.current) {
-      // Separate horizontal and vertical movement
-      const horizontalMovement = {
-        x: 0,
-        z: 0,
-      };
-
-      const verticalMovement = {
-        y: 0,
-      };
-
-      // Forward/backward movement
-      if (get().forward) {
-        horizontalMovement.z = 1;
-      }
-      if (get().backward) {
-        horizontalMovement.z = -1;
-      }
-
-      // Vertical movement (flying up/down)
-      if (get().up) {
-        verticalMovement.y = 1;
-      }
-      if (get().down) {
-        verticalMovement.y = -1;
-      }
-
+      let horizontalMovement = { x: 0, z: 0 };
+      let verticalMovement = { y: 0 };
       let speed = FLIGHT_SPEED;
 
-      if (get().left) {
-        horizontalMovement.x = 1;
-      }
-      if (get().right) {
-        horizontalMovement.x = -1;
-      }
+      // Normal keyboard controls
+      if (get().forward) horizontalMovement.z = 1;
+      if (get().backward) horizontalMovement.z = -1;
+      if (get().left) horizontalMovement.x = 1;
+      if (get().right) horizontalMovement.x = -1;
+      if (get().up) verticalMovement.y = 1;
+      if (get().down) verticalMovement.y = -1;
 
-      // Smooth rotation changes
+      // Rest of the movement code for manual control remains the same...
       if (horizontalMovement.x !== 0) {
         rotationTarget.current = MathUtils.lerp(
           rotationTarget.current,
@@ -103,18 +135,13 @@ export const CharacterController = () => {
         );
       }
 
-      // Check if character is moving horizontally
       const isHorizontallyMoving =
         horizontalMovement.x !== 0 || horizontalMovement.z !== 0;
-
-      // Check if character is moving at all
       const isCurrentlyMoving =
         isHorizontallyMoving || verticalMovement.y !== 0;
 
-      // Set target tilt based on horizontal movement only
       targetTiltRef.current = isHorizontallyMoving ? TILT_ANGLE : 0;
 
-      // Apply tilt to character model with smooth transition
       if (character.current) {
         character.current.rotation.x = MathUtils.lerp(
           character.current.rotation.x,
@@ -123,16 +150,13 @@ export const CharacterController = () => {
         );
       }
 
-      // Calculate target velocity
       if (isCurrentlyMoving) {
-        // Only update character rotation if moving horizontally
         if (isHorizontallyMoving) {
           characterRotationTarget.current = Math.atan2(
             horizontalMovement.x,
             horizontalMovement.z
           );
 
-          // Set horizontal target velocity
           targetVelocity.current.x =
             Math.sin(rotationTarget.current + characterRotationTarget.current) *
             speed;
@@ -140,23 +164,17 @@ export const CharacterController = () => {
             Math.cos(rotationTarget.current + characterRotationTarget.current) *
             speed;
         } else {
-          // If only moving vertically, maintain current horizontal velocity
-          // but gradually reduce it for a smooth stop
           targetVelocity.current.x *= 0.95;
           targetVelocity.current.z *= 0.95;
         }
 
-        // Set vertical velocity directly
         targetVelocity.current.y = verticalMovement.y * VERTICAL_SPEED;
       } else {
-        // When not moving, gradually slow down to zero
         targetVelocity.current.set(0, 0, 0);
       }
 
-      // Smoothly interpolate current velocity towards target velocity
       currentVelocity.current.lerp(targetVelocity.current, MOVEMENT_SMOOTHING);
 
-      // Apply the smoothed velocity
       rb.current.setLinvel(
         {
           x: currentVelocity.current.x,
@@ -166,7 +184,6 @@ export const CharacterController = () => {
         true
       );
 
-      // Smooth character rotation - only update if moving horizontally
       if (isHorizontallyMoving) {
         character.current.rotation.y = lerpAngle(
           character.current.rotation.y,
@@ -176,7 +193,6 @@ export const CharacterController = () => {
       }
     }
 
-    // CAMERA - smooth camera movement
     container.current.rotation.y = MathUtils.lerp(
       container.current.rotation.y,
       rotationTarget.current,
@@ -198,27 +214,40 @@ export const CharacterController = () => {
   });
 
   return (
-    <RigidBody
-      name="character"
-      colliders={false}
-      lockRotations
-      ref={rb}
-      position={[0, 10, 0]}
-      gravityScale={0}
-      type="dynamic"
-      linearDamping={0.95}
-      angularDamping={0.95}
-    >
-      <group ref={container}>
-        <group ref={cameraTarget} position-z={50} />
-        <group ref={cameraPosition} position-y={30} position-z={-50} />
-        <group ref={character}>
-          <Character position={[0, 5, 0]} rotation={[0, 0, 0]} scale={12} />
+    <>
+      <RigidBody
+        name="character"
+        colliders={false}
+        lockRotations
+        ref={rb}
+        position={[0, 10, 0]}
+        gravityScale={0}
+        type="dynamic"
+        linearDamping={0.95}
+        angularDamping={0.95}
+      >
+        <group ref={container}>
+          <group ref={cameraTarget} position-z={5.5} />
+          <group ref={cameraPosition} position-y={30} position-z={-50} />
+          <group ref={character}>
+            <Character position={[0, 0, 0]} rotation={[0, 0, 0]} scale={12} />
+          </group>
         </group>
-      </group>
-      <CapsuleCollider args={[1.8, 1.8]} position={[0, 8, 0]} />
-    </RigidBody>
+        <CapsuleCollider args={[1.8, 1.8]} position={[0, 3, 0]} />
+      </RigidBody>
+
+      {/* White overlay for fade transition */}
+      <mesh position={[0, 0, 0]} renderOrder={1000}>
+        <planeGeometry args={[100000, 100000]} />
+        <meshBasicMaterial
+          transparent
+          opacity={fadeOpacity}
+          color="white"
+          depthTest={false}
+        />
+      </mesh>
+    </>
   );
-};
+});
 
 export default CharacterController;
