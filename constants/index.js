@@ -40,10 +40,6 @@ export const skills = [
     imageUrl: "/skills/prismaa.png",
   },
   {
-    name: "NextAuth",
-    imageUrl: "/skills/nextAuth.jpeg",
-  },
-  {
     name: "Git",
     imageUrl: "/skills/git.png",
   },
@@ -66,6 +62,54 @@ export const skills = [
   {
     name: "C",
     imageUrl: "/skills/C.png",
+  },
+  {
+    name: "Unity",
+    imageUrl: "/skills/unity.png",
+  },
+  {
+    name: "Pytorch",
+    imageUrl: "/skills/pytorch.png",
+  },
+  {
+    name: "Flask",
+    imageUrl: "/skills/flask_.png",
+  },
+  {
+    name: "GraphQL",
+    imageUrl: "/skills/graphQL.png",
+  },
+  {
+    name: "Three.js",
+    imageUrl: "/skills/threejs.png",
+  },
+  {
+    name: "SQL",
+    imageUrl: "/skills/sql.png",
+  },
+  {
+    name: "RESTAPI",
+    imageUrl: "/skills/restAPI.png",
+  },
+  {
+    name: "Docker",
+    imageUrl: "/skills/dockerr.png",
+  },
+  {
+    name: "C#",
+    imageUrl: "/skills/csharp.png",
+  },
+  {
+    name: ".NET",
+    imageUrl: "/skills/dotnet.png",
+  },
+  {
+    name: "D3.js",
+    imageUrl: "/skills/d3.png",
+  },
+  {
+    name: "STM32 CubeIDE",
+    imageUrl: "/skills/cubeide.png",
   },
 ];
 
