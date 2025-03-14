@@ -71,8 +71,37 @@ export const Experience = forwardRef(
 
     // Area positions
     const workExperiencePosition = [18, 35, 85];
-    const projectsPosition = [25, 55, 60]; // Opposite side of work experience
+    const projectsPosition = [20, 53.786, 65.436]; // 15th coin position
     const startingPosition = [0, 10, 0];
+
+    // Get coin positions from Coins component
+    const coinPositions = [
+      [-3.832, 23.786, 15.436],
+      [-20.832, 26.786, 30.436],
+      [-25.832, 30.786, 45.436],
+      [-20.832, 31.786, 65.436],
+      [-5.832, 33.786, 80.436],
+      [13.832, 35.786, 80.436],
+      [30, 35.786, 70.436],
+      [35, 38.786, 50.436],
+      [25, 40.786, 30.436],
+      [5, 40.786, 25.436],
+      [-9, 43.786, 28.436],
+      [-17, 45.786, 45.436],
+      [-17, 48.786, 60.436],
+      [-5, 48.786, 70.436],
+      [20, 53.786, 65.436], // 15th coin (index 14)
+      [25, 53.786, 50.436],
+      [12, 53.786, 35.436],
+      [-10, 53.786, 40.436],
+      [-10, 55.786, 55.436],
+      [-3, 63.786, 51.436],
+    ];
+
+    // Create path for projects (first 15 coins)
+    const projectsPath = coinPositions
+      .slice(0, 15)
+      .map((pos) => new THREE.Vector3(...pos));
 
     // Expose methods
     useImperativeHandle(ref, () => ({
@@ -112,22 +141,27 @@ export const Experience = forwardRef(
             const currentPos = characterRef.current.getCurrentPosition();
             const startPos = new THREE.Vector3(...startingPosition);
 
+            const moveToProjectsPath = () => {
+              const waypoints = projectsPath.map((pos) => pos.clone());
+              characterRef.current.moveToPosition(
+                waypoints[waypoints.length - 1],
+                () => {
+                  console.log("Reached final position, showing projects");
+                  onProjectsChange(true);
+                },
+                waypoints
+              );
+            };
+
             if (currentPos.distanceTo(startPos) > 2) {
+              console.log("Teleporting to start");
               characterRef.current.teleportToPosition(startPos, () => {
-                characterRef.current.moveToPosition(
-                  new THREE.Vector3(...projectsPosition),
-                  () => {
-                    onProjectsChange(true);
-                  }
-                );
+                console.log("Starting path following");
+                moveToProjectsPath();
               });
             } else {
-              characterRef.current.moveToPosition(
-                new THREE.Vector3(...projectsPosition),
-                () => {
-                  onProjectsChange(true);
-                }
-              );
+              console.log("Already at start, following path");
+              moveToProjectsPath();
             }
           }
         }
@@ -267,7 +301,7 @@ export const Experience = forwardRef(
           {/* Projects Trigger Area */}
           <ProjectTrigger
             position={projectsPosition}
-            size={[20, 10, 30]}
+            size={[30, 20, 30]} // Increased size to ensure detection
             onEnter={() => {
               console.log("Entered projects area");
               setIsInProjectsZone(true);

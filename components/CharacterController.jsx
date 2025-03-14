@@ -69,6 +69,8 @@ export const CharacterController = forwardRef((props, ref) => {
   // Add path following state
   const [isFollowingPath, setIsFollowingPath] = useState(false);
   const currentPathIndex = useRef(0);
+  const customPath = useRef(null);
+  const onPathComplete = useRef(null);
   const pathPositions = useRef([
     [-3.832, 23.786, 15.436],
     [-20.832, 26.786, 30.436],
@@ -95,13 +97,20 @@ export const CharacterController = forwardRef((props, ref) => {
 
   // Expose methods
   useImperativeHandle(ref, () => ({
-    moveToPosition: (position, callback) => {
+    moveToPosition: (position, callback, waypoints) => {
       if (rb.current) {
         // Start fade out
         setFadeOpacity(1);
 
         // Wait for fade out, then start path following
         fadeTimeout.current = setTimeout(() => {
+          // If waypoints are provided, use them instead of default path
+          if (waypoints) {
+            customPath.current = waypoints;
+          } else {
+            customPath.current = null;
+          }
+          onPathComplete.current = callback;
           setIsFollowingPath(true);
           currentPathIndex.current = 0;
 
@@ -167,10 +176,11 @@ export const CharacterController = forwardRef((props, ref) => {
           translation.z
         );
 
+        // Use custom path if available, otherwise use default path
+        const currentPath = customPath.current || pathPositions.current;
+
         // Get target position from path
-        const targetPos = new Vector3(
-          ...pathPositions.current[currentPathIndex.current]
-        );
+        const targetPos = new Vector3(...currentPath[currentPathIndex.current]);
 
         // Calculate direction to target
         const direction = targetPos.clone().sub(currentPos);
@@ -180,42 +190,21 @@ export const CharacterController = forwardRef((props, ref) => {
         if (distance < 2) {
           currentPathIndex.current++;
 
-          // If we've reached the 6th coin (index 5) or end of path
-          if (
-            currentPathIndex.current >= 6 ||
-            currentPathIndex.current >= pathPositions.current.length
-          ) {
+          // Check if we've reached the end of the path
+          if (currentPathIndex.current >= currentPath.length) {
             setIsFollowingPath(false);
+            customPath.current = null;
 
-            // Calculate direction to center
-            const currentPos = new Vector3(
-              rb.current.translation().x,
-              rb.current.translation().y,
-              rb.current.translation().z
-            );
-            const centerPos = new Vector3(0, 0, 0);
-            const directionToCenter = centerPos.clone().sub(currentPos);
-            const angleToCenter = Math.atan2(
-              directionToCenter.x,
-              directionToCenter.z
-            );
-
-            // Set both container and character to face center
-            rotationTarget.current = angleToCenter;
-            container.current.rotation.y = angleToCenter;
-            characterRotationTarget.current = angleToCenter;
-            if (character.current) {
-              character.current.rotation.y = angleToCenter;
-            }
-
-            if (props.onReachTarget) {
-              props.onReachTarget();
+            // Call the completion callback
+            if (onPathComplete.current) {
+              onPathComplete.current();
+              onPathComplete.current = null;
             }
             return;
           }
 
           // Get new target position
-          targetPos.set(...pathPositions.current[currentPathIndex.current]);
+          targetPos.set(...currentPath[currentPathIndex.current]);
           direction.copy(targetPos).sub(currentPos);
         }
 
