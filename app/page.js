@@ -5,6 +5,7 @@ import { Experience } from "@/components/Experience";
 import Navbar from "@/components/Navbar";
 import WorkExperience from "@/components/work_experience/page";
 import Projects from "@/components/projects/page";
+import Contact from "@/components/contact/page";
 import { useState, useRef } from "react";
 
 const keyboardMap = [
@@ -20,6 +21,7 @@ const keyboardMap = [
 function App() {
   const [showWorkExperience, setShowWorkExperience] = useState(false);
   const [showProjects, setShowProjects] = useState(false);
+  const [showContact, setShowContact] = useState(false);
   const experienceRef = useRef();
 
   const handleWorkExperienceChange = (value) => {
@@ -28,6 +30,10 @@ function App() {
 
   const handleProjectsChange = (value) => {
     setShowProjects(value);
+  };
+
+  const handleContactChange = (value) => {
+    setShowContact(value);
   };
 
   const handleExperienceClick = () => {
@@ -65,6 +71,9 @@ function App() {
         />
       )}
 
+      {/* Contact Overlay */}
+      {showContact && <Contact onContactChange={handleContactChange} />}
+
       {/* Canvas taking up the entire screen */}
       <KeyboardControls map={keyboardMap}>
         <Canvas
@@ -92,6 +101,7 @@ function App() {
             ref={experienceRef}
             onWorkExperienceChange={handleWorkExperienceChange}
             onProjectsChange={handleProjectsChange}
+            onContactChange={handleContactChange}
           />
         </Canvas>
       </KeyboardControls>

@@ -5,22 +5,48 @@ import Image from "next/image";
 import SkillsGrid from "../work_experience/SkillsGrid";
 import { socialLinks } from "@/constants";
 import ExperienceTimeline from "../work_experience/Timeline";
-import { Button } from "../ui/button";
+import { X } from "lucide-react";
+import { useEffect } from "react";
 
 const Projects = ({ isVisible, onClose }) => {
   if (!isVisible) return null;
 
+  // Handle escape key press
+  useEffect(() => {
+    const handleEscape = (e) => {
+      if (e.key === "Escape" && typeof onClose === "function") {
+        onClose();
+      }
+    };
+
+    window.addEventListener("keydown", handleEscape);
+    return () => window.removeEventListener("keydown", handleEscape);
+  }, [onClose]);
+
   return (
-    <div className="fixed inset-0 flex justify-center z-50 pt-10">
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: 20 }}
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm"
+      onClick={onClose}
+    >
       <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        className="relative bg-white/90 dark:bg-black/90 rounded-xl shadow-xl 
-                  max-w-6xl w-[90%] backdrop-blur-sm mx-4 max-h-[80vh]"
+        initial={{ scale: 0.9 }}
+        animate={{ scale: 1 }}
+        className="relative bg-white rounded-lg shadow-xl max-w-6xl w-[90%] m-4 max-h-[90vh] overflow-hidden"
+        onClick={(e) => e.stopPropagation()}
       >
+        {/* Close button */}
+        <button
+          onClick={onClose}
+          className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 z-50"
+        >
+          <X className="w-6 h-6" />
+        </button>
+
         {/* Scrollable content */}
-        <div className="overflow-y-auto max-h-[80vh]">
+        <div className="overflow-y-auto max-h-[90vh]">
           <main className="w-full max-w-6xl mx-auto px-8 py-8 space-y-16">
             {/* Header Section */}
             <section className="space-y-4">
@@ -38,18 +64,8 @@ const Projects = ({ isVisible, onClose }) => {
             </section>
           </main>
         </div>
-
-        {/* Close button */}
-        <Button
-          variant="island"
-          className="absolute bottom-8 right-8 px-4 py-2 text-white rounded-md 
-                   hover:bg-blue-600 transition-colors shadow-lg z-10"
-          onClick={onClose}
-        >
-          Close
-        </Button>
       </motion.div>
-    </div>
+    </motion.div>
   );
 };
 

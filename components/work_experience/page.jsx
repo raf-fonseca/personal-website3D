@@ -29,34 +29,37 @@ const WorkExperience = ({ onWorkExperienceChange }) => {
   };
 
   return (
-    <div className="fixed inset-0 flex justify-center z-50 pt-10">
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: 20 }}
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm"
+      onClick={handleClose}
+    >
       <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        className="relative bg-white/90 dark:bg-black/90 rounded-xl shadow-xl 
-                  max-w-6xl w-[90%] backdrop-blur-sm mx-4 max-h-[80vh]"
+        initial={{ scale: 0.9 }}
+        animate={{ scale: 1 }}
+        className="relative bg-white rounded-lg shadow-xl max-w-6xl w-[90%] m-4 max-h-[90vh] overflow-hidden"
+        onClick={(e) => e.stopPropagation()}
       >
         {/* Close button */}
         <button
           onClick={handleClose}
-          className="absolute top-4 right-4 p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-800 
-                     transition-colors duration-200 z-50"
-          aria-label="Close work experience"
+          className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 z-50"
         >
-          <X className="w-6 h-6 text-gray-600 dark:text-gray-300" />
+          <X className="w-6 h-6" />
         </button>
 
         {/* Scrollable content */}
-        <div className="overflow-y-auto max-h-[80vh]">
+        <div className="overflow-y-auto max-h-[90vh]">
           <main className="w-full max-w-6xl mx-auto px-8 py-8 space-y-16">
             {/* Header Section */}
-            <section className="space-y-4 ">
-              <h1 className="text-5xl font-bold text-black dark:text-white ">
+            <section className="space-y-4">
+              <h1 className="text-5xl font-bold text-black dark:text-white">
                 Hi, I&apos;m{" "}
                 <span className="gradient-text inline-block">Raf</span>
               </h1>
-              <p className="text-lg text-muted-foreground ">
+              <p className="text-lg text-muted-foreground">
                 I am a Software Developer studying Computer Engineering at the
                 University of Waterloo. My passion for learning has led me to
                 explore virtual reality, neural networks, and full-stack
@@ -99,7 +102,7 @@ const WorkExperience = ({ onWorkExperienceChange }) => {
           </main>
         </div>
       </motion.div>
-    </div>
+    </motion.div>
   );
 };
 

@@ -17,6 +17,7 @@ import WelcomeSign from "./WelcomeSign";
 import WorkExperienceTrigger from "./WorkExperienceTrigger";
 import ProjectTrigger from "./ProjectTrigger";
 import MessageSign from "./MessageSign";
+import ContactMeTrigger from "./ContactMeTrigger";
 
 // Sun component with glow effect
 const Sun = ({ position = [-500, 500, -300], size = 15 }) => {
@@ -61,18 +62,20 @@ const Sun = ({ position = [-500, 500, -300], size = 15 }) => {
 };
 
 export const Experience = forwardRef(
-  ({ onWorkExperienceChange, onProjectsChange }, ref) => {
+  ({ onWorkExperienceChange, onProjectsChange, onContactChange }, ref) => {
     const shadowCameraRef = useRef();
     const lightRef = useRef();
     const characterRef = useRef();
     const { scene, gl } = useThree();
     const [isInWorkExperienceZone, setIsInWorkExperienceZone] = useState(false);
     const [isInProjectsZone, setIsInProjectsZone] = useState(false);
+    const [isInContactZone, setIsInContactZone] = useState(false);
 
     // Area positions
     const workExperiencePosition = [13.832, 35.786, 80.436]; // 6th coin position
     const projectsPosition = [20, 53.786, 65.436];
     const startingPosition = [0, 10, 0];
+    const contactPosition = [0, 65, 50]; // Position at the top
 
     // Get coin positions from Coins component
     const coinPositions = [
@@ -260,6 +263,17 @@ export const Experience = forwardRef(
           showPost={false}
         />
 
+        <MessageSign
+          position={[-4, 70, 47]}
+          scale={1}
+          width={10}
+          height={3}
+          rotation={[0, -(Math.PI / 2) + 0.5, 0]}
+          topText="CONTACT"
+          bottomText="ME"
+          showPost={false}
+        />
+
         {/* Main directional light (sun light) */}
         <directionalLight
           ref={lightRef}
@@ -330,6 +344,22 @@ export const Experience = forwardRef(
               console.log("Exited projects area");
               setIsInProjectsZone(false);
               onProjectsChange(false);
+            }}
+          />
+
+          {/* Contact Trigger Area */}
+          <ContactMeTrigger
+            position={contactPosition}
+            size={[10, 10, 10]}
+            onEnter={() => {
+              console.log("Entered contact area");
+              setIsInContactZone(true);
+              onContactChange(true);
+            }}
+            onExit={() => {
+              console.log("Exited contact area");
+              setIsInContactZone(false);
+              onContactChange(false);
             }}
           />
         </Physics>
