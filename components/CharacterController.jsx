@@ -333,7 +333,7 @@ export const CharacterController = forwardRef((props, ref) => {
         angularDamping={0.95}
       >
         <group ref={container}>
-          <group ref={cameraTarget} position-z={5.5} />
+          <group ref={cameraTarget} position-z={25} />
           <group ref={cameraPosition} />
           <group ref={character}>
             <Character position={[0, 0, 0]} rotation={[0, 0, 0]} scale={12} />

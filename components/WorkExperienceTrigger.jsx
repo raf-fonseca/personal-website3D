@@ -3,7 +3,7 @@ import { RigidBody } from "@react-three/rapier";
 import { useState } from "react";
 
 export function WorkExperienceTrigger({
-  position = [0, 0, 0],
+  position = [0, 0, 50],
   size = [10, 10, 10],
   onEnter,
   onExit,
@@ -34,7 +34,7 @@ export function WorkExperienceTrigger({
         <boxGeometry args={size} />
         <meshStandardMaterial
           transparent={true}
-          opacity={0.3}
+          opacity={0}
           side={2} // Makes the box visible from inside and outside
         />
       </mesh>

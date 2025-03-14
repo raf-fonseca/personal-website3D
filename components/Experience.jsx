@@ -14,6 +14,7 @@ import { useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
 import WelcomeSign from "./WelcomeSign";
 import WorkExperienceTrigger from "./WorkExperienceTrigger";
+import MessageSign from "./MessageSign";
 
 // Sun component with glow effect
 const Sun = ({ position = [-500, 500, -300], size = 15 }) => {
@@ -105,6 +106,28 @@ export const Experience = forwardRef(({ onWorkExperienceChange }, ref) => {
 
       {/* Welcome Sign - positioned near the starting point */}
       <WelcomeSign position={[8, 25.5, 21]} scale={2} width={10} height={3} />
+
+      <MessageSign
+        position={[22, 40, 88]}
+        scale={1}
+        width={10}
+        height={3}
+        rotation={[0, Math.PI + 1.1, 0]}
+        topText="WORK"
+        bottomText="EXPERIENCE"
+        showPost={false}
+      />
+
+      <MessageSign
+        position={[16, 36, 71.5]}
+        scale={1}
+        width={10}
+        height={3}
+        rotation={[0, Math.PI * 2, 0]}
+        topText="WORK"
+        bottomText="EXPERIENCE"
+        showPost
+      />
 
       {/* Main directional light (sun light) */}
       <directionalLight
