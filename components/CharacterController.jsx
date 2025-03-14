@@ -323,6 +323,9 @@ export const CharacterController = forwardRef((props, ref) => {
             setIsFollowingPath(false);
             customPath.current = null;
 
+            characterRotationTarget.current += Math.PI;
+            rotationTarget.current += Math.PI;
+
             if (onPathComplete.current) {
               onPathComplete.current();
               onPathComplete.current = null;
