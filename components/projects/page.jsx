@@ -7,7 +7,7 @@ import { socialLinks } from "@/constants";
 import ExperienceTimeline from "../work_experience/Timeline";
 import { Button } from "../ui/button";
 
-const Projects = ({ isVisible }) => {
+const Projects = ({ isVisible, onClose }) => {
   if (!isVisible) return null;
 
   return (
@@ -23,22 +23,30 @@ const Projects = ({ isVisible }) => {
         <div className="overflow-y-auto max-h-[80vh]">
           <main className="w-full max-w-6xl mx-auto px-8 py-8 space-y-16">
             {/* Header Section */}
-            <section className="space-y-4 ">
-              <h1 className="text-5xl font-bold text-black dark:text-white ">
-                <span className="gradient-text inline-block">PROJECTS</span>
+            <section className="space-y-4">
+              <h1 className="text-5xl font-bold text-black dark:text-white">
+                <span className="gradient-text inline-block">My Projects</span>
               </h1>
-              <p className="text-lg text-muted-foreground ">AHHHHH</p>
+              <p className="text-lg text-muted-foreground">
+                Here are some of my notable projects and contributions.
+              </p>
+            </section>
+
+            {/* Projects Grid will go here */}
+            <section className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              {/* Project cards will be added here */}
             </section>
           </main>
         </div>
 
-        {/* Button outside of scrollable area */}
+        {/* Close button */}
         <Button
           variant="island"
           className="absolute bottom-8 right-8 px-4 py-2 text-white rounded-md 
                    hover:bg-blue-600 transition-colors shadow-lg z-10"
+          onClick={onClose}
         >
-          Continue
+          Close
         </Button>
       </motion.div>
     </div>

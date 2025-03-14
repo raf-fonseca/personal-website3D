@@ -2,7 +2,7 @@
 import { RigidBody } from "@react-three/rapier";
 import { useState } from "react";
 
-export function WorkExperienceTrigger({
+export function ProjectTrigger({
   position = [0, 0, 50],
   size = [10, 10, 10],
   onEnter,
@@ -42,4 +42,4 @@ export function WorkExperienceTrigger({
   );
 }
 
-export default WorkExperienceTrigger;
+export default ProjectTrigger;

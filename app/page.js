@@ -4,6 +4,7 @@ import { Canvas } from "@react-three/fiber";
 import { Experience } from "@/components/Experience";
 import Navbar from "@/components/Navbar";
 import WorkExperience from "@/components/work_experience/page";
+import Projects from "@/components/projects/page";
 import { useState, useRef } from "react";
 
 const keyboardMap = [
@@ -18,10 +19,15 @@ const keyboardMap = [
 
 function App() {
   const [showWorkExperience, setShowWorkExperience] = useState(false);
+  const [showProjects, setShowProjects] = useState(false);
   const experienceRef = useRef();
 
   const handleWorkExperienceChange = (value) => {
     setShowWorkExperience(value);
+  };
+
+  const handleProjectsChange = (value) => {
+    setShowProjects(value);
   };
 
   const handleExperienceClick = () => {
@@ -30,16 +36,33 @@ function App() {
     }
   };
 
+  const handleProjectsClick = () => {
+    if (experienceRef.current) {
+      experienceRef.current.moveToProjects();
+    }
+  };
+
   return (
     <div className="relative w-full h-screen overflow-hidden">
       {/* Navbar positioned absolutely at the top */}
       <div className="absolute top-0 left-0 right-0 z-50">
-        <Navbar onExperienceClick={handleExperienceClick} />
+        <Navbar
+          onExperienceClick={handleExperienceClick}
+          onProjectsClick={handleProjectsClick}
+        />
       </div>
 
       {/* Work Experience Overlay */}
       {showWorkExperience && (
         <WorkExperience onWorkExperienceChange={handleWorkExperienceChange} />
+      )}
+
+      {/* Projects Overlay */}
+      {showProjects && (
+        <Projects
+          isVisible={showProjects}
+          onClose={() => handleProjectsChange(false)}
+        />
       )}
 
       {/* Canvas taking up the entire screen */}
@@ -68,6 +91,7 @@ function App() {
           <Experience
             ref={experienceRef}
             onWorkExperienceChange={handleWorkExperienceChange}
+            onProjectsChange={handleProjectsChange}
           />
         </Canvas>
       </KeyboardControls>

@@ -36,7 +36,7 @@ const lerpAngle = (start, end, t) => {
 
 export const CharacterController = forwardRef((props, ref) => {
   // Fixed values instead of controls
-  const FLIGHT_SPEED = 40;
+  const FLIGHT_SPEED = 30;
   const VERTICAL_SPEED = 20;
   const ROTATION_SPEED = degToRad(50.107);
   const TILT_ANGLE = degToRad(15);
@@ -93,7 +93,7 @@ export const CharacterController = forwardRef((props, ref) => {
     [0, 35, 0], // Final position at center
   ]);
 
-  // Expose moveToPosition method
+  // Expose methods
   useImperativeHandle(ref, () => ({
     moveToPosition: (position, callback) => {
       if (rb.current) {
@@ -111,6 +111,35 @@ export const CharacterController = forwardRef((props, ref) => {
           }, 300);
         }, 300);
       }
+    },
+    teleportToPosition: (position, onComplete) => {
+      if (rb.current) {
+        // Start fade out
+        setFadeOpacity(1);
+
+        // Wait for fade out, then teleport
+        fadeTimeout.current = setTimeout(() => {
+          // Instantly move the character to the position
+          rb.current.setTranslation(position, true);
+          // Reset any movement state
+          targetVelocity.current.set(0, 0, 0);
+          currentVelocity.current.set(0, 0, 0);
+
+          // Start fade in
+          setTimeout(() => {
+            setFadeOpacity(0);
+            // Call the completion callback after fade in
+            onComplete?.();
+          }, 300);
+        }, 300);
+      }
+    },
+    getCurrentPosition: () => {
+      if (rb.current) {
+        const translation = rb.current.translation();
+        return new Vector3(translation.x, translation.y, translation.z);
+      }
+      return new Vector3();
     },
   }));
 
