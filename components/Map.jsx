@@ -5,7 +5,7 @@ import { useEffect, useRef } from "react";
 import * as THREE from "three";
 
 export const Map = ({ ...props }) => {
-  const { scene } = useGLTF("/3D/Fantasy Island 3D Model.glb");
+  const { scene } = useGLTF("/3D/Island.glb");
   const group = useRef();
 
   useEffect(() => {

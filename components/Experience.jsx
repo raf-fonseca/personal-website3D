@@ -143,7 +143,7 @@ export const Experience = forwardRef(({ onWorkExperienceChange }, ref) => {
       <ambientLight intensity={0.7} color="#FFFFFF" />
 
       <Physics debug={false}>
-        <Map scale={1} position={[0, 0, 50]} />
+        <Map scale={1} position={[0, 0, 0]} />
         <CharacterController ref={characterRef} />
         <Coins />
 
