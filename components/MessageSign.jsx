@@ -10,8 +10,8 @@ export function MessageSign({
   scale = 1,
   width = 8,
   height = 2.5,
-  topText = "TOP TEXT",
-  bottomText = "BOTTOM TEXT",
+  topText = "",
+  bottomText = "",
   showPost = true,
 }) {
   const signRef = useRef();
@@ -81,41 +81,53 @@ export function MessageSign({
         </mesh>
 
         {/* Top Text */}
-        <Center position={[0, boardHeight * 0.16, boardThickness / 2 + 0.05]}>
-          <Text3D
-            font="/fonts/helvetiker_regular.typeface.json"
-            size={textSize}
-            height={0.2 * scale}
-            curveSegments={12}
-          >
-            {topText}
-            <meshStandardMaterial
-              color="#FFFFFF"
-              emissive="#FFFFFF"
-              emissiveIntensity={0.2}
-              metalness={0.4}
-              roughness={0.3}
-            />
-          </Text3D>
+        <Center
+          position={[0, boardHeight * 0.16, boardThickness / 2 + 0.05]}
+          center
+        >
+          <group position={[0, 0, 0]}>
+            <Text3D
+              font="/fonts/helvetiker_regular.typeface.json"
+              size={textSize}
+              height={0.2 * scale}
+              curveSegments={12}
+              center
+            >
+              {topText}
+              <meshStandardMaterial
+                color="#FFFFFF"
+                emissive="#FFFFFF"
+                emissiveIntensity={0.2}
+                metalness={0.4}
+                roughness={0.3}
+              />
+            </Text3D>
+          </group>
         </Center>
 
         {/* Bottom Text */}
-        <Center position={[0, -boardHeight * 0.24, boardThickness / 2 + 0.05]}>
-          <Text3D
-            font="/fonts/helvetiker_regular.typeface.json"
-            size={textSize}
-            height={0.2 * scale}
-            curveSegments={12}
-          >
-            {bottomText}
-            <meshStandardMaterial
-              color="#FFFFFF"
-              emissive="#FFFFFF"
-              emissiveIntensity={0.2}
-              metalness={0.4}
-              roughness={0.3}
-            />
-          </Text3D>
+        <Center
+          position={[0, -boardHeight * 0.24, boardThickness / 2 + 0.05]}
+          center
+        >
+          <group position={[0, 0, 0]}>
+            <Text3D
+              font="/fonts/helvetiker_regular.typeface.json"
+              size={textSize}
+              height={0.2 * scale}
+              curveSegments={12}
+              center
+            >
+              {bottomText}
+              <meshStandardMaterial
+                color="#FFFFFF"
+                emissive="#FFFFFF"
+                emissiveIntensity={0.2}
+                metalness={0.4}
+                roughness={0.3}
+              />
+            </Text3D>
+          </group>
         </Center>
 
         {/* Decorative nails at corners */}

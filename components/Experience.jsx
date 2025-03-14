@@ -71,7 +71,7 @@ export const Experience = forwardRef(
 
     // Area positions
     const workExperiencePosition = [13.832, 35.786, 80.436]; // 6th coin position
-    const projectsPosition = [20, 53.786, 65.436]; // 15th coin position
+    const projectsPosition = [20, 53.786, 65.436];
     const startingPosition = [0, 10, 0];
 
     // Get coin positions from Coins component
@@ -239,28 +239,26 @@ export const Experience = forwardRef(
           showPost
         />
 
-        {/* Projects Sign */}
-        {/* <MessageSign
-          position={[-22, 40, 88]}
-          scale={1}
-          width={10}
-          height={3}
-          rotation={[0, Math.PI - 1.1, 0]}
-          topText="MY"
-          bottomText="PROJECTS"
-          showPost={false}
-        />
-
         <MessageSign
-          position={[-16, 36, 71.5]}
+          position={[15, 60, 50]}
           scale={1}
           width={10}
           height={3}
           rotation={[0, Math.PI * 2, 0]}
-          topText="MY"
-          bottomText="PROJECTS"
+          topText="PROJECTS"
+          bottomText=""
           showPost
-        /> */}
+        />
+        <MessageSign
+          position={[22, 62, 78]}
+          scale={1}
+          width={10}
+          height={3}
+          rotation={[0, Math.PI + 1.1, 0]}
+          topText="PROJECTS"
+          bottomText=""
+          showPost={false}
+        />
 
         {/* Main directional light (sun light) */}
         <directionalLight
