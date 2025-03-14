@@ -86,21 +86,7 @@ export const CharacterController = forwardRef((props, ref) => {
   const { collectedCoins, collectCoin } = useCoins();
   const lastCollectedCoinPosition = useRef(null);
 
-  const [fadeOpacity, setFadeOpacity] = useState(0);
-  const [isFading, setIsFading] = useState(false);
-
   const { camera } = useThree();
-
-  // Create spring animation for fade with adjusted config
-  const fadeSpring = useSpring({
-    opacity: fadeOpacity,
-    config: {
-      mass: 1,
-      tension: 180,
-      friction: 20,
-      clamp: true,
-    },
-  });
 
   // Add path following state
   const [isFollowingPath, setIsFollowingPath] = useState(false);
@@ -158,103 +144,76 @@ export const CharacterController = forwardRef((props, ref) => {
   // Expose methods
   useImperativeHandle(ref, () => ({
     moveToPosition: (position, callback, waypoints) => {
-      if (rb.current && !isFading) {
-        setIsFading(true);
-        setFadeOpacity(1);
+      if (rb.current) {
+        if (waypoints) {
+          // Get current position and convert first waypoint to Vector3 if it isn't already
+          const currentPos = rb.current.translation();
 
-        setTimeout(() => {
-          if (waypoints) {
-            // Get current position and convert first waypoint to Vector3 if it isn't already
-            const currentPos = rb.current.translation();
+          // If we have a last collected coin position and it's in the waypoints, start from there
+          let startIndex = 0;
+          if (lastCollectedCoinPosition.current) {
+            startIndex = waypoints.findIndex((waypoint) => {
+              const wp =
+                waypoint instanceof Vector3
+                  ? waypoint
+                  : new Vector3(...waypoint);
+              return wp.distanceTo(lastCollectedCoinPosition.current) < 0.1;
+            });
 
-            // If we have a last collected coin position and it's in the waypoints, start from there
-            let startIndex = 0;
-            if (lastCollectedCoinPosition.current) {
-              startIndex = waypoints.findIndex((waypoint) => {
-                const wp =
-                  waypoint instanceof Vector3
-                    ? waypoint
-                    : new Vector3(...waypoint);
-                return wp.distanceTo(lastCollectedCoinPosition.current) < 0.1;
-              });
-
-              // If found, start from the next waypoint
-              if (startIndex !== -1) {
-                startIndex += 1;
-              } else {
-                startIndex = 0;
-              }
+            // If found, start from the next waypoint
+            if (startIndex !== -1) {
+              startIndex += 1;
+            } else {
+              startIndex = 0;
             }
-
-            // If we're not starting from a collected coin, use current position
-            if (startIndex === 0) {
-              const firstWaypoint = waypoints[0];
-              const startPos =
-                firstWaypoint instanceof Vector3
-                  ? firstWaypoint
-                  : new Vector3(...firstWaypoint);
-
-              // If close to current position, use current position
-              if (
-                new Vector3(
-                  currentPos.x,
-                  currentPos.y,
-                  currentPos.z
-                ).distanceTo(startPos) < 2
-              ) {
-                waypoints[0] = [currentPos.x, currentPos.y, currentPos.z];
-              }
-            }
-
-            // Convert waypoints to Vector3 objects, starting from the appropriate point
-            customPath.current = waypoints
-              .slice(startIndex)
-              .map((pos) =>
-                pos instanceof Vector3 ? pos.clone() : new Vector3(...pos)
-              );
-            currentPathIndex.current = 0;
-
-            // Preserve current velocity for smooth transition
-            const currentVel = rb.current.linvel();
-            targetVelocity.current.set(
-              currentVel.x,
-              currentVel.y,
-              currentVel.z
-            );
-          } else {
-            customPath.current = null;
           }
 
-          onPathComplete.current = callback;
-          setIsFollowingPath(true);
-          setFadeOpacity(0);
+          // If we're not starting from a collected coin, use current position
+          if (startIndex === 0) {
+            const firstWaypoint = waypoints[0];
+            const startPos =
+              firstWaypoint instanceof Vector3
+                ? firstWaypoint
+                : new Vector3(...firstWaypoint);
 
-          setTimeout(() => {
-            setIsFading(false);
-          }, 300);
-        }, 300);
+            // If close to current position, use current position
+            if (
+              new Vector3(currentPos.x, currentPos.y, currentPos.z).distanceTo(
+                startPos
+              ) < 2
+            ) {
+              waypoints[0] = [currentPos.x, currentPos.y, currentPos.z];
+            }
+          }
+
+          // Convert waypoints to Vector3 objects, starting from the appropriate point
+          customPath.current = waypoints
+            .slice(startIndex)
+            .map((pos) =>
+              pos instanceof Vector3 ? pos.clone() : new Vector3(...pos)
+            );
+          currentPathIndex.current = 0;
+
+          // Preserve current velocity for smooth transition
+          const currentVel = rb.current.linvel();
+          targetVelocity.current.set(currentVel.x, currentVel.y, currentVel.z);
+        } else {
+          customPath.current = null;
+        }
+
+        onPathComplete.current = callback;
+        setIsFollowingPath(true);
       }
     },
     teleportToPosition: (position, onComplete) => {
-      if (rb.current && !isFading) {
-        setIsFading(true);
-        setFadeOpacity(1);
-
-        setTimeout(() => {
-          rb.current.setTranslation(position, true);
-          // Reset movement and rotation state
-          targetVelocity.current.set(0, 0, 0);
-          currentVelocity.current.set(0, 0, 0);
-          characterRotationTarget.current = 0;
-          rotationTarget.current = 0;
-
-          setFadeOpacity(0);
-
-          setTimeout(() => {
-            onComplete?.();
-            setIsFading(false);
-          }, 300);
-        }, 300);
+      if (rb.current) {
+        rb.current.setTranslation(position, true);
+        // Reset movement and rotation state
+        targetVelocity.current.set(0, 0, 0);
+        currentVelocity.current.set(0, 0, 0);
+        characterRotationTarget.current = 0;
+        rotationTarget.current = 0;
+        onComplete?.();
       }
     },
     getCurrentPosition: () => {
@@ -267,15 +226,6 @@ export const CharacterController = forwardRef((props, ref) => {
     getCollectedCoins: () => collectedCoins,
     getLastCollectedCoinPosition: () => lastCollectedCoinPosition.current,
   }));
-
-  // Cleanup timeout on unmount
-  useEffect(() => {
-    return () => {
-      if (fadeTimeout.current) {
-        clearTimeout(fadeTimeout.current);
-      }
-    };
-  }, []);
 
   useFrame(({ camera }) => {
     if (rb.current) {
@@ -517,38 +467,6 @@ export const CharacterController = forwardRef((props, ref) => {
         </group>
         <CapsuleCollider args={[1.8, 1.8]} position={[0, 3, 0]} />
       </RigidBody>
-
-      {/* Camera-relative fade overlay */}
-      <group position={[0, 0, 0]}>
-        <animated.mesh renderOrder={9999}>
-          <planeGeometry args={[100, 100]} />
-          <animated.meshBasicMaterial
-            transparent
-            opacity={fadeSpring.opacity}
-            color="white"
-            depthTest={false}
-            depthWrite={false}
-            side={DoubleSide}
-            blending={NormalBlending}
-            fog={false}
-          />
-        </animated.mesh>
-      </group>
-
-      {/* Fixed position overlay for complete coverage */}
-      <animated.mesh position={[0, 0, 0]} renderOrder={9998}>
-        <planeGeometry args={[1000000, 1000000]} />
-        <animated.meshBasicMaterial
-          transparent
-          opacity={fadeSpring.opacity}
-          color="white"
-          depthTest={false}
-          depthWrite={false}
-          side={DoubleSide}
-          blending={NormalBlending}
-          fog={false}
-        />
-      </animated.mesh>
     </>
   );
 });
