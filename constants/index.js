@@ -177,3 +177,31 @@ export const socialLinks = [
     link: "https://x.com/rafaelf0nseca",
   },
 ];
+
+export const projects = [
+  {
+    title: "Growie",
+    description:
+      "Introducing Growie: a platform where farmers and gardeners rent out land to nature lovers, letting them create and enjoy their own personalized gardens! 🌱🌿",
+    imageUrl: "/projects/growie.jpeg",
+    technologies: [
+      "Typescript",
+      "React",
+      "Nextjs",
+      "Prisma",
+      "MongoDB",
+      "Next Auth",
+      "Tailwindcss",
+    ],
+    liveUrl: "https://growie.rafaelsf.com/",
+    githubUrl: "https://github.com/raf-fonseca/Growie",
+  },
+  {
+    title: "AAVE agent",
+    description:
+      "A decentralized finance (DeFi) agent that interacts with the AAVE protocol to provide users with a seamless borrowing and lending experience.",
+    imageUrl: "/projects/aave.png",
+    technologies: ["Python", "Web3", "OpenAI API"],
+    githubUrl: "https://github.com/username/aave-agent",
+  },
+];

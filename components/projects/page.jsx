@@ -1,12 +1,9 @@
 "use client";
 import { motion } from "framer-motion";
-import Link from "next/link";
-import Image from "next/image";
-import SkillsGrid from "../work_experience/SkillsGrid";
-import { socialLinks } from "@/constants";
-import ExperienceTimeline from "../work_experience/Timeline";
 import { X } from "lucide-react";
 import { useEffect } from "react";
+import ProjectCard from "./ProjectCard";
+import { projects } from "@/constants";
 
 const Projects = ({ isVisible, onClose }) => {
   if (!isVisible) return null;
@@ -47,20 +44,19 @@ const Projects = ({ isVisible, onClose }) => {
 
         {/* Scrollable content */}
         <div className="overflow-y-auto max-h-[90vh]">
-          <main className="w-full max-w-6xl mx-auto px-8 py-8 space-y-16">
+          <main className="w-full max-w-6xl mx-auto px-8 py-8 space-y-8">
             {/* Header Section */}
             <section className="space-y-4">
               <h1 className="text-5xl font-bold text-black dark:text-white">
-                <span className="gradient-text inline-block">My Projects</span>
+                <span className="gradient-text inline-block">Projects</span>
               </h1>
-              <p className="text-lg text-muted-foreground">
-                Here are some of my notable projects and contributions.
-              </p>
             </section>
 
-            {/* Projects Grid will go here */}
-            <section className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              {/* Project cards will be added here */}
+            {/* Projects Grid */}
+            <section className="py-4">
+              {projects.map((project) => (
+                <ProjectCard key={project.id} project={project} />
+              ))}
             </section>
           </main>
         </div>
