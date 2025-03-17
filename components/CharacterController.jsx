@@ -254,18 +254,7 @@ export const CharacterController = forwardRef((props, ref) => {
 
         // If we're close enough to current target, collect the coin and move to next point
         if (distance < 2) {
-          // Find the coin index based on position
-          const coinIndex = coinPositions.findIndex(
-            (pos) =>
-              Math.abs(pos[0] - targetPos.x) < 0.1 &&
-              Math.abs(pos[1] - targetPos.y) < 0.1 &&
-              Math.abs(pos[2] - targetPos.z) < 0.1
-          );
-
-          if (coinIndex !== -1 && !collectedCoins.includes(coinIndex)) {
-            collectCoin(coinIndex);
-          }
-
+          // Move to next point without manually collecting coins
           currentPathIndex.current++;
 
           // Check if we've reached the end of the path
