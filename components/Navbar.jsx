@@ -6,7 +6,11 @@ import { Button } from "./ui/button";
 import { useEffect, useRef } from "react";
 import confetti from "canvas-confetti";
 
-export default function Navbar({ onExperienceClick, onProjectsClick }) {
+export default function Navbar({
+  onExperienceClick,
+  onProjectsClick,
+  onContactClick,
+}) {
   const { collectedCoins, totalCoins, progressPercentage } = useCoins();
   const prevProgressRef = useRef(progressPercentage);
 
@@ -98,6 +102,9 @@ export default function Navbar({ onExperienceClick, onProjectsClick }) {
             </Button>
             <Button variant="island" onClick={onProjectsClick}>
               Projects
+            </Button>
+            <Button variant="island" onClick={onContactClick}>
+              Contact
             </Button>
           </div>
         </div>

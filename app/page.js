@@ -48,6 +48,12 @@ function App() {
     }
   };
 
+  const handleContactClick = () => {
+    if (experienceRef.current) {
+      experienceRef.current.moveToContact();
+    }
+  };
+
   return (
     <div className="relative w-full h-screen overflow-hidden">
       {/* Navbar positioned absolutely at the top */}
@@ -55,6 +61,7 @@ function App() {
         <Navbar
           onExperienceClick={handleExperienceClick}
           onProjectsClick={handleProjectsClick}
+          onContactClick={handleContactClick}
         />
       </div>
 

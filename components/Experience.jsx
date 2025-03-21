@@ -103,6 +103,14 @@ export const Experience = forwardRef(
     const projectsPath = coinPositions
       .slice(0, 15)
       .map((pos) => new THREE.Vector3(...pos));
+    const contactPath = [
+      ...coinPositions.slice(0, 15).map((pos) => new THREE.Vector3(...pos)),
+      new THREE.Vector3(22, 53.786, 50.436), // 16th coin
+      new THREE.Vector3(12, 53.786, 35.436), // 17th coin
+      new THREE.Vector3(0, 53.786, 35.436), // 18th coin
+      new THREE.Vector3(-11, 53.786, 45.436), // 19th coin
+      new THREE.Vector3(-4, 65, 50), // 20th coin - Contact Target
+    ];
 
     // Expose methods
     useImperativeHandle(ref, () => ({
@@ -184,6 +192,48 @@ export const Experience = forwardRef(
               new THREE.Vector3(...projectsPosition),
               () => {
                 onProjectsChange(true);
+              },
+              pathToUse
+            );
+          }
+        }
+      },
+      moveToContact: () => {
+        if (characterRef.current) {
+          if (isInContactZone) {
+            onContactChange(true);
+          } else {
+            const currentPos = characterRef.current.getCurrentPosition();
+            const startPos = new THREE.Vector3(...startingPosition);
+            const lastCollectedPos =
+              characterRef.current.getLastCollectedCoinPosition();
+
+            // If we have a last collected position, find its index in the path
+            let pathToUse = contactPath;
+            if (lastCollectedPos) {
+              const lastCollectedIndex = contactPath.findIndex(
+                (waypoint) => waypoint.distanceTo(lastCollectedPos) < 0.1
+              );
+              if (lastCollectedIndex !== -1) {
+                // Start from the next waypoint after the last collected coin
+                pathToUse = contactPath.slice(lastCollectedIndex + 1);
+              }
+            }
+
+            // If no last collected position or not found in path, start from current position
+            if (pathToUse === contactPath) {
+              pathToUse = [
+                currentPos.distanceTo(startPos) <= 2
+                  ? currentPos
+                  : new THREE.Vector3(...startingPosition),
+                ...contactPath,
+              ];
+            }
+
+            characterRef.current.moveToPosition(
+              new THREE.Vector3(...contactPosition),
+              () => {
+                onContactChange(true);
               },
               pathToUse
             );

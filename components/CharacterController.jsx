@@ -119,7 +119,36 @@ export const CharacterController = forwardRef((props, ref) => {
     [-17, 45.786, 45.436], // 12th coin
     [-17, 48.786, 60.436], // 13th coin
     [-5, 48.786, 70.436], // 14th coin
-    [20, 53.786, 65.436], // 15th coin - Projects Target
+    [20, 53.786, 65.436], // 15th coin
+    [22, 53.786, 50.436], // 16th coin
+    [12, 53.786, 35.436], // 17th coin
+    [0, 53.786, 36.436], // 18th coin
+    [-11, 53.786, 45.436], // 19th coin
+    [-4, 65, 50], // 20th coin - Projects Target
+  ]);
+
+  const contactPath = useRef([
+    [-3.832, 23.786, 15.436], // 1st coin
+    [-20.832, 26.786, 30.436], // 2nd coin
+    [-25.832, 30.786, 45.436], // 3rd coin
+    [-20.832, 31.786, 65.436], // 4th coin
+    [-5.832, 33.786, 80.436], // 5th coin
+    [13.832, 35.786, 80.436], // 6th coin
+    [30, 35.786, 70.436], // 7th coin
+    [35, 38.786, 50.436], // 8th coin
+    [25, 40.786, 30.436], // 9th coin
+    [5, 40.786, 25.436], // 10th coin
+    [-9, 43.786, 28.436], // 11th coin
+    [-17, 45.786, 45.436], // 12th coin
+    [-17, 48.786, 60.436], // 13th coin
+    [-5, 48.786, 70.436], // 14th coin
+    [20, 53.786, 65.436], // 15th coin
+    [22, 53.786, 50.436], // 16th coin
+    [12, 53.786, 35.436], // 17th coin
+    [0, 53.786, 36.436], // 18th coin
+    [-11, 53.786, 45.436], // 19th coin
+    [-4, 65, 50], // 20th coin
+    [-4, 65, 50], // Contact Target
   ]);
 
   // Function to find coin position in the path
@@ -208,6 +237,27 @@ export const CharacterController = forwardRef((props, ref) => {
         onPathComplete.current = callback;
         setIsFollowingPath(true);
       }
+    },
+    moveToWorkExperience: () => {
+      moveToPosition(
+        null,
+        () => props.onWorkExperienceChange(true),
+        workExperiencePath.current
+      );
+    },
+    moveToProjects: () => {
+      moveToPosition(
+        null,
+        () => props.onProjectsChange(true),
+        projectsPath.current
+      );
+    },
+    moveToContact: () => {
+      moveToPosition(
+        null,
+        () => props.onContactChange(true),
+        contactPath.current
+      );
     },
     teleportToPosition: (position, onComplete) => {
       if (rb.current) {
