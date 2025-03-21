@@ -70,6 +70,7 @@ export const Experience = forwardRef(
     const [isInWorkExperienceZone, setIsInWorkExperienceZone] = useState(false);
     const [isInProjectsZone, setIsInProjectsZone] = useState(false);
     const [isInContactZone, setIsInContactZone] = useState(false);
+    const [targetSection, setTargetSection] = useState(null);
 
     // Area positions
     const workExperiencePosition = [13.832, 35.786, 85.436]; // 6th coin position
@@ -116,6 +117,7 @@ export const Experience = forwardRef(
     useImperativeHandle(ref, () => ({
       moveToWorkExperience: () => {
         if (characterRef.current) {
+          setTargetSection("workExperience");
           if (isInWorkExperienceZone) {
             onWorkExperienceChange(true);
           } else {
@@ -150,6 +152,7 @@ export const Experience = forwardRef(
               new THREE.Vector3(...workExperiencePosition),
               () => {
                 onWorkExperienceChange(true);
+                setTargetSection(null);
               },
               pathToUse
             );
@@ -158,6 +161,7 @@ export const Experience = forwardRef(
       },
       moveToProjects: () => {
         if (characterRef.current) {
+          setTargetSection("projects");
           if (isInProjectsZone) {
             onProjectsChange(true);
           } else {
@@ -192,6 +196,7 @@ export const Experience = forwardRef(
               new THREE.Vector3(...projectsPosition),
               () => {
                 onProjectsChange(true);
+                setTargetSection(null);
               },
               pathToUse
             );
@@ -200,6 +205,7 @@ export const Experience = forwardRef(
       },
       moveToContact: () => {
         if (characterRef.current) {
+          setTargetSection("contact");
           if (isInContactZone) {
             onContactChange(true);
           } else {
@@ -234,6 +240,7 @@ export const Experience = forwardRef(
               new THREE.Vector3(...contactPosition),
               () => {
                 onContactChange(true);
+                setTargetSection(null);
               },
               pathToUse
             );
@@ -371,30 +378,37 @@ export const Experience = forwardRef(
             size={[20, 12, 20]}
             onEnter={() => {
               console.log("Entered work experience area");
-              setIsInWorkExperienceZone(true);
-              onWorkExperienceChange(true);
+              if (targetSection === "workExperience") {
+                setIsInWorkExperienceZone(true);
+                onWorkExperienceChange(true);
+              }
             }}
             onExit={() => {
               console.log("Exited work experience area");
-              setIsInWorkExperienceZone(false);
-              d;
-              onWorkExperienceChange(false);
+              if (targetSection === "workExperience") {
+                setIsInWorkExperienceZone(false);
+                onWorkExperienceChange(false);
+              }
             }}
           />
 
           {/* Projects Trigger Area */}
           <ProjectTrigger
             position={projectsPosition}
-            size={[20, 8, 25]} // Increased size to ensure detection
+            size={[20, 8, 25]}
             onEnter={() => {
               console.log("Entered projects area");
-              setIsInProjectsZone(true);
-              onProjectsChange(true);
+              if (targetSection === "projects") {
+                setIsInProjectsZone(true);
+                onProjectsChange(true);
+              }
             }}
             onExit={() => {
               console.log("Exited projects area");
-              setIsInProjectsZone(false);
-              onProjectsChange(false);
+              if (targetSection === "projects") {
+                setIsInProjectsZone(false);
+                onProjectsChange(false);
+              }
             }}
           />
 
@@ -404,13 +418,17 @@ export const Experience = forwardRef(
             size={[10, 10, 10]}
             onEnter={() => {
               console.log("Entered contact area");
-              setIsInContactZone(true);
-              onContactChange(true);
+              if (targetSection === "contact") {
+                setIsInContactZone(true);
+                onContactChange(true);
+              }
             }}
             onExit={() => {
               console.log("Exited contact area");
-              setIsInContactZone(false);
-              onContactChange(false);
+              if (targetSection === "contact") {
+                setIsInContactZone(false);
+                onContactChange(false);
+              }
             }}
           />
         </Physics>
