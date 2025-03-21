@@ -40,7 +40,7 @@ export const CharacterController = forwardRef((props, ref) => {
   // Fixed values instead of controls
   const FLIGHT_SPEED = 30;
   const VERTICAL_SPEED = 20;
-  const ROTATION_SPEED = degToRad(50.107);
+  const ROTATION_SPEED = degToRad(20.107);
   const TILT_ANGLE = degToRad(15);
   const TILT_SPEED = 0.1;
   const MOVEMENT_SMOOTHING = 0.05;
@@ -145,7 +145,7 @@ export const CharacterController = forwardRef((props, ref) => {
   useImperativeHandle(ref, () => ({
     moveToPosition: (position, callback, waypoints) => {
       if (rb.current) {
-        if (waypoints) {
+        if (waypoints && waypoints.length > 0) {
           // Get current position and convert first waypoint to Vector3 if it isn't already
           const currentPos = rb.current.translation();
 
@@ -153,6 +153,7 @@ export const CharacterController = forwardRef((props, ref) => {
           let startIndex = 0;
           if (lastCollectedCoinPosition.current) {
             startIndex = waypoints.findIndex((waypoint) => {
+              if (!waypoint) return false;
               const wp =
                 waypoint instanceof Vector3
                   ? waypoint
@@ -171,6 +172,8 @@ export const CharacterController = forwardRef((props, ref) => {
           // If we're not starting from a collected coin, use current position
           if (startIndex === 0) {
             const firstWaypoint = waypoints[0];
+            if (!firstWaypoint) return; // Exit if no valid first waypoint
+
             const startPos =
               firstWaypoint instanceof Vector3
                 ? firstWaypoint
@@ -189,6 +192,7 @@ export const CharacterController = forwardRef((props, ref) => {
           // Convert waypoints to Vector3 objects, starting from the appropriate point
           customPath.current = waypoints
             .slice(startIndex)
+            .filter((waypoint) => waypoint) // Filter out any undefined waypoints
             .map((pos) =>
               pos instanceof Vector3 ? pos.clone() : new Vector3(...pos)
             );
@@ -233,6 +237,23 @@ export const CharacterController = forwardRef((props, ref) => {
       let verticalMovement = { y: 0 };
       let speed = FLIGHT_SPEED;
 
+      // Check for manual movement input
+      const hasManualInput =
+        get().forward ||
+        get().backward ||
+        get().left ||
+        get().right ||
+        get().up ||
+        get().down;
+
+      // If we detect manual input while following path, clear the path
+      if (hasManualInput && isFollowingPath) {
+        setIsFollowingPath(false);
+        customPath.current = null;
+        // Remove the completion callback when manually interrupting
+        onPathComplete.current = null;
+      }
+
       if (isFollowingPath) {
         const translation = rb.current.translation();
         const currentPos = new Vector3(
@@ -252,9 +273,8 @@ export const CharacterController = forwardRef((props, ref) => {
         const direction = targetPos.clone().sub(currentPos);
         const distance = direction.length();
 
-        // If we're close enough to current target, collect the coin and move to next point
+        // If we're close enough to current target, move to next point
         if (distance < 2) {
-          // Move to next point without manually collecting coins
           currentPathIndex.current++;
 
           // Check if we've reached the end of the path
@@ -288,15 +308,13 @@ export const CharacterController = forwardRef((props, ref) => {
         // Set character rotation to face movement direction
         characterRotationTarget.current = Math.atan2(direction.x, direction.z);
       } else {
-        // Only process keyboard controls if not following path
-        if (!isFollowingPath) {
-          if (get().forward) horizontalMovement.z = 1;
-          if (get().backward) horizontalMovement.z = -1;
-          if (get().left) horizontalMovement.x = 1;
-          if (get().right) horizontalMovement.x = -1;
-          if (get().up) verticalMovement.y = 1;
-          if (get().down) verticalMovement.y = -1;
-        }
+        // Process keyboard controls for manual movement
+        if (get().forward) horizontalMovement.z = 1;
+        if (get().backward) horizontalMovement.z = -1;
+        if (get().left) horizontalMovement.x = 1;
+        if (get().right) horizontalMovement.x = -1;
+        if (get().up) verticalMovement.y = 1;
+        if (get().down) verticalMovement.y = -1;
 
         // Rest of the manual movement code...
         if (horizontalMovement.x !== 0) {
