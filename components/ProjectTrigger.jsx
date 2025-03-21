@@ -34,7 +34,7 @@ export function ProjectTrigger({
         <boxGeometry args={size} />
         <meshStandardMaterial
           transparent={true}
-          opacity={0}
+          opacity={0.3}
           side={2} // Makes the box visible from inside and outside
         />
       </mesh>

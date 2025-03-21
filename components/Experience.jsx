@@ -72,8 +72,8 @@ export const Experience = forwardRef(
     const [isInContactZone, setIsInContactZone] = useState(false);
 
     // Area positions
-    const workExperiencePosition = [13.832, 35.786, 80.436]; // 6th coin position
-    const projectsPosition = [20, 53.786, 65.436];
+    const workExperiencePosition = [13.832, 35.786, 85.436]; // 6th coin position
+    const projectsPosition = [20, 51, 60.436];
     const startingPosition = [0, 10, 0];
     const contactPosition = [0, 65, 50]; // Position at the top
 
@@ -318,7 +318,7 @@ export const Experience = forwardRef(
           {/* Work Experience Trigger Area */}
           <WorkExperienceTrigger
             position={workExperiencePosition}
-            size={[30, 20, 30]}
+            size={[20, 12, 20]}
             onEnter={() => {
               console.log("Entered work experience area");
               setIsInWorkExperienceZone(true);
@@ -327,6 +327,7 @@ export const Experience = forwardRef(
             onExit={() => {
               console.log("Exited work experience area");
               setIsInWorkExperienceZone(false);
+              d;
               onWorkExperienceChange(false);
             }}
           />
@@ -334,7 +335,7 @@ export const Experience = forwardRef(
           {/* Projects Trigger Area */}
           <ProjectTrigger
             position={projectsPosition}
-            size={[20, 10, 30]} // Increased size to ensure detection
+            size={[20, 8, 25]} // Increased size to ensure detection
             onEnter={() => {
               console.log("Entered projects area");
               setIsInProjectsZone(true);
