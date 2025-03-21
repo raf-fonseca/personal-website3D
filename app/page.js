@@ -6,6 +6,7 @@ import Navbar from "@/components/Navbar";
 import WorkExperience from "@/components/work_experience/page";
 import Projects from "@/components/projects/page";
 import Contact from "@/components/contact/page";
+import MovementInstructions from "@/components/MovementInstructions";
 import { useState, useRef } from "react";
 
 const keyboardMap = [
@@ -14,8 +15,7 @@ const keyboardMap = [
   { name: "left", keys: ["ArrowLeft", "KeyA"] },
   { name: "right", keys: ["ArrowRight", "KeyD"] },
   { name: "up", keys: ["Space"] },
-  { name: "down", keys: ["ShiftLeft", "KeyC"] },
-  { name: "run", keys: ["ShiftRight"] },
+  { name: "down", keys: ["ShiftLeft"] },
 ];
 
 function App() {
@@ -105,6 +105,9 @@ function App() {
           />
         </Canvas>
       </KeyboardControls>
+
+      {/* Movement Instructions */}
+      <MovementInstructions />
     </div>
   );
 }
