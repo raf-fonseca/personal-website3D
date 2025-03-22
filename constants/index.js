@@ -116,6 +116,17 @@ export const skills = [
 export const experiences = [
   {
     title: "Software Developer",
+    company: "Waterloo Reality Labs",
+    icon: "/realitylabs.png",
+    iconBg: "#302C23CC",
+    date: "March 2025 - Present",
+    points: [
+      "Accomplished a ~0.3ms latency data exchange between a humanoid robot and VR client for teleoperation by integrating Meta SDK hand tracking with a WebSocket server.",
+      "Achieved 99.9% accuracy by training a feed-forward neural network in PyTorch to classify RGB colors as warm or cool.",
+    ],
+  },
+  {
+    title: "Software Developer",
     company: "Cineplex",
     icon: "/cineplex.png",
     iconBg: "#88A6E7",
