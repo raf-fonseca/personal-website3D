@@ -4,6 +4,7 @@ import { X } from "lucide-react";
 import { useEffect } from "react";
 import ProjectCard from "./ProjectCard";
 import { projects } from "@/constants";
+import ScrollIndicator from "../ScrollIndicator";
 
 const Projects = ({ isVisible, onClose }) => {
   if (!isVisible) return null;
@@ -61,6 +62,7 @@ const Projects = ({ isVisible, onClose }) => {
           </main>
         </div>
       </motion.div>
+      <ScrollIndicator />
     </motion.div>
   );
 };

@@ -8,6 +8,7 @@ import ExperienceTimeline from "./Timeline";
 import { useEffect } from "react";
 import { X } from "lucide-react";
 import PropTypes from "prop-types";
+import ScrollIndicator from "../ScrollIndicator";
 
 const WorkExperience = ({ onWorkExperienceChange }) => {
   // Handle escape key press
@@ -102,6 +103,7 @@ const WorkExperience = ({ onWorkExperienceChange }) => {
           </main>
         </div>
       </motion.div>
+      <ScrollIndicator />
     </motion.div>
   );
 };
