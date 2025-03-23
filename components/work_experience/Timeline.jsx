@@ -36,7 +36,8 @@ const TimelineItem = ({ item, index }) => {
             src={item.icon}
             alt={item.company}
             fill
-            className="object-contain p-2"
+            className="object-contain p-1 rounded-full"
+            style={{ backgroundColor: item.iconBg }}
           />
         </motion.div>
 
