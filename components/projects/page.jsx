@@ -26,7 +26,7 @@ const Projects = ({ isVisible, onClose }) => {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: 20 }}
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm py-4 sm:py-6 md:py-8 lg:py-10"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm py-8 sm:py-12 md:py-16 lg:py-20"
       onClick={onClose}
     >
       <motion.div
