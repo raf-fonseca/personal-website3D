@@ -35,7 +35,7 @@ export function ContactMeTrigger({
         <boxGeometry args={size} />
         <meshStandardMaterial
           transparent={true}
-          opacity={0.3}
+          opacity={0}
           side={2} // Makes the box visible from inside and outside
         />
       </mesh>

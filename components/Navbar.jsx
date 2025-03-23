@@ -77,7 +77,7 @@ export default function Navbar({
           {/* Progress section - centered */}
           <div className="flex items-center justify-center gap-2 sm:gap-3">
             {/* Current progress number */}
-            <span className="text-base sm:text-xl font-medium">
+            <span className="text-white sm:text-xl font-medium">
               {collectedCoins.length}
             </span>
 
@@ -91,7 +91,7 @@ export default function Navbar({
 
             {/* Total with coin icon */}
             <div className="flex items-center gap-1.5">
-              <span className="text-base sm:text-xl font-medium">
+              <span className="text-white sm:text-xl font-medium">
                 {totalCoins}
               </span>
               <Coin className="w-4 h-4 sm:w-5 sm:h-5 text-amber-400 fill-amber-200" />
