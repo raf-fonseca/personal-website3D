@@ -61,10 +61,13 @@ export default function Navbar({
   return (
     <div className="flex items-center justify-center">
       <div className="w-full py-4 px-4 rounded-xl">
-        <div className="grid grid-cols-3 items-center gap-3 sm:gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 items-center gap-3 sm:gap-6">
           {/* Logo */}
-          <div className="flex items-center justify-start">
-            <div className="w-14 h-12 rounded-xl flex items-center justify-center bg-gradient-to-r from-[#4caf50] to-[#8bc34a] shadow-lg hover:shadow-xl transition-shadow duration-300">
+          <div className="hidden lg:flex items-center justify-start">
+            <div
+              className="w-14 h-12 rounded-xl flex items-center justify-center bg-gradient-to-r from-[#4caf50] to-[#8bc34a] shadow-lg hover:shadow-xl transition-shadow duration-300 cursor-pointer"
+              onClick={() => window.location.reload()}
+            >
               <span className="text-lg sm:text-xl font-bold text-white">
                 RF
               </span>
@@ -95,8 +98,8 @@ export default function Navbar({
             </div>
           </div>
 
-          {/* Navigation */}
-          <div className="flex items-center justify-end gap-3 sm:gap-6">
+          {/* Navigation - centered on mobile, right-aligned on desktop */}
+          <div className="flex items-center justify-center lg:justify-end gap-3 sm:gap-6">
             <Button variant="island" onClick={onExperienceClick}>
               Experience
             </Button>
