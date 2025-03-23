@@ -4,7 +4,7 @@ export default function MovementInstructions({ isVisible = true }) {
   if (!isVisible) return null;
 
   return (
-    <div className="absolute bottom-4 left-4 bg-white/80 backdrop-blur-sm rounded-xl p-6 shadow-lg">
+    <div className="absolute bottom-4 left-4 bg-white/80 backdrop-blur-sm rounded-xl p-6 shadow-lg hidden lg:block">
       <div className="space-y-3">
         <div className="flex items-center gap-3">
           <span className="text-base font-medium text-gray-700">Movement:</span>
