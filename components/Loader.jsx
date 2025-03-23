@@ -21,6 +21,7 @@ const Loader = () => {
   const [usedMessages, setUsedMessages] = useState(() => [
     Math.floor(Math.random() * loadingMessages.length),
   ]);
+  const [shouldShow, setShouldShow] = useState(true);
 
   const getRandomMessage = () => {
     if (usedMessages.length === loadingMessages.length) {
@@ -40,9 +41,15 @@ const Loader = () => {
   };
 
   useEffect(() => {
-    if (!active) return; // Only rotate messages while loading
+    if (!active) {
+      // When loading is complete, wait 1.5 seconds before hiding
+      const timer = setTimeout(() => {
+        setShouldShow(false);
+      }, 1500);
+      return () => clearTimeout(timer);
+    }
 
-    // Rotate messages every 2 seconds
+    // Rotate messages every 2 seconds while loading
     const messageInterval = setInterval(() => {
       setCurrentMessage(getRandomMessage());
     }, 2000);
@@ -51,6 +58,8 @@ const Loader = () => {
       clearInterval(messageInterval);
     };
   }, [active]);
+
+  if (!shouldShow) return null;
 
   return (
     <div className="absolute inset-0 flex flex-col items-center justify-center bg-gradient-to-b from-[#94c5f8] to-[#daefff]">
