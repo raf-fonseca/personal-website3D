@@ -22,6 +22,7 @@ function App() {
   const [showWorkExperience, setShowWorkExperience] = useState(false);
   const [showProjects, setShowProjects] = useState(false);
   const [showContact, setShowContact] = useState(false);
+  const [isAutomaticMode, setIsAutomaticMode] = useState(false);
   const experienceRef = useRef();
 
   const handleWorkExperienceChange = (value) => {
@@ -82,7 +83,7 @@ function App() {
       {showContact && <Contact onContactChange={handleContactChange} />}
 
       {/* Canvas taking up the entire screen */}
-      <KeyboardControls map={keyboardMap}>
+      <KeyboardControls map={keyboardMap} enabled={!isAutomaticMode}>
         <Canvas
           shadows={{ type: "PCFSoftShadowMap", enabled: true }}
           dpr={[1, 2]}
@@ -109,12 +110,13 @@ function App() {
             onWorkExperienceChange={handleWorkExperienceChange}
             onProjectsChange={handleProjectsChange}
             onContactChange={handleContactChange}
+            onAutomaticModeChange={setIsAutomaticMode}
           />
         </Canvas>
       </KeyboardControls>
 
       {/* Movement Instructions */}
-      <MovementInstructions />
+      <MovementInstructions isVisible={!isAutomaticMode} />
     </div>
   );
 }

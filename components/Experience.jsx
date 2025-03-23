@@ -62,7 +62,15 @@ const Sun = ({ position = [-500, 500, -300], size = 15 }) => {
 };
 
 export const Experience = forwardRef(
-  ({ onWorkExperienceChange, onProjectsChange, onContactChange }, ref) => {
+  (
+    {
+      onWorkExperienceChange,
+      onProjectsChange,
+      onContactChange,
+      onAutomaticModeChange,
+    },
+    ref
+  ) => {
     const shadowCameraRef = useRef();
     const lightRef = useRef();
     const characterRef = useRef();
@@ -77,6 +85,11 @@ export const Experience = forwardRef(
       projects: false,
       contact: false,
     });
+
+    // Update parent component when isAutomaticMode changes
+    useEffect(() => {
+      onAutomaticModeChange?.(isAutomaticMode);
+    }, [isAutomaticMode, onAutomaticModeChange]);
 
     // Area positions
     const workExperiencePosition = [13.832, 35.786, 85.436]; // 6th coin position
@@ -393,7 +406,10 @@ export const Experience = forwardRef(
 
         <Physics debug={false}>
           <Map scale={1} position={[0, 0, 0]} />
-          <CharacterController ref={characterRef} />
+          <CharacterController
+            ref={characterRef}
+            isAutomaticMode={isAutomaticMode}
+          />
           <Coins />
 
           {/* Work Experience Trigger Area */}

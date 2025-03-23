@@ -296,8 +296,8 @@ export const CharacterController = forwardRef((props, ref) => {
         get().up ||
         get().down;
 
-      // If we detect manual input while following path, clear the path
-      if (hasManualInput && isFollowingPath) {
+      // If we detect manual input while following path and not in automatic mode, clear the path
+      if (hasManualInput && isFollowingPath && !props.isAutomaticMode) {
         setIsFollowingPath(false);
         customPath.current = null;
         // Remove the completion callback when manually interrupting
@@ -357,8 +357,8 @@ export const CharacterController = forwardRef((props, ref) => {
 
         // Set character rotation to face movement direction
         characterRotationTarget.current = Math.atan2(direction.x, direction.z);
-      } else {
-        // Process keyboard controls for manual movement
+      } else if (!props.isAutomaticMode) {
+        // Only process manual movement if not in automatic mode
         if (get().forward) horizontalMovement.z = 1;
         if (get().backward) horizontalMovement.z = -1;
         if (get().left) horizontalMovement.x = 1;
@@ -414,6 +414,9 @@ export const CharacterController = forwardRef((props, ref) => {
         } else {
           targetVelocity.current.set(0, 0, 0);
         }
+      } else {
+        // If in automatic mode and not following path, stop all movement
+        targetVelocity.current.set(0, 0, 0);
       }
 
       currentVelocity.current.lerp(targetVelocity.current, MOVEMENT_SMOOTHING);

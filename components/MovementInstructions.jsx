@@ -1,6 +1,8 @@
 "use client";
 
-export default function MovementInstructions() {
+export default function MovementInstructions({ isVisible = true }) {
+  if (!isVisible) return null;
+
   return (
     <div className="absolute bottom-4 left-4 bg-white/80 backdrop-blur-sm rounded-xl p-6 shadow-lg">
       <div className="space-y-3">
