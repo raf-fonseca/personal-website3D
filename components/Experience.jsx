@@ -72,6 +72,11 @@ export const Experience = forwardRef(
     const [isInContactZone, setIsInContactZone] = useState(false);
     const [targetSection, setTargetSection] = useState(null);
     const [isAutomaticMode, setIsAutomaticMode] = useState(false);
+    const [visitedAreas, setVisitedAreas] = useState({
+      workExperience: false,
+      projects: false,
+      contact: false,
+    });
 
     // Area positions
     const workExperiencePosition = [13.832, 35.786, 85.436]; // 6th coin position
@@ -118,6 +123,10 @@ export const Experience = forwardRef(
     useImperativeHandle(ref, () => ({
       moveToWorkExperience: () => {
         if (characterRef.current) {
+          if (visitedAreas.workExperience) {
+            onWorkExperienceChange(true);
+            return;
+          }
           setIsAutomaticMode(true);
           setTargetSection("workExperience");
           if (isInWorkExperienceZone) {
@@ -164,6 +173,10 @@ export const Experience = forwardRef(
       },
       moveToProjects: () => {
         if (characterRef.current) {
+          if (visitedAreas.projects) {
+            onProjectsChange(true);
+            return;
+          }
           setIsAutomaticMode(true);
           setTargetSection("projects");
           if (isInProjectsZone) {
@@ -210,6 +223,10 @@ export const Experience = forwardRef(
       },
       moveToContact: () => {
         if (characterRef.current) {
+          if (visitedAreas.contact) {
+            onContactChange(true);
+            return;
+          }
           setIsAutomaticMode(true);
           setTargetSection("contact");
           if (isInContactZone) {
@@ -386,6 +403,7 @@ export const Experience = forwardRef(
             onEnter={() => {
               console.log("Entered work experience area");
               setIsInWorkExperienceZone(true);
+              setVisitedAreas((prev) => ({ ...prev, workExperience: true }));
               if (!isAutomaticMode || targetSection === "workExperience") {
                 onWorkExperienceChange(true);
               }
@@ -404,6 +422,7 @@ export const Experience = forwardRef(
             onEnter={() => {
               console.log("Entered projects area");
               setIsInProjectsZone(true);
+              setVisitedAreas((prev) => ({ ...prev, projects: true }));
               if (!isAutomaticMode || targetSection === "projects") {
                 onProjectsChange(true);
               }
@@ -422,6 +441,7 @@ export const Experience = forwardRef(
             onEnter={() => {
               console.log("Entered contact area");
               setIsInContactZone(true);
+              setVisitedAreas((prev) => ({ ...prev, contact: true }));
               if (!isAutomaticMode || targetSection === "contact") {
                 onContactChange(true);
               }
