@@ -95,7 +95,7 @@ export const Experience = forwardRef(
     const workExperiencePosition = [13.832, 35.786, 85.436]; // 6th coin position
     const projectsPosition = [20, 51, 60.436];
     const startingPosition = [0, 10, 0];
-    const contactPosition = [0, 65, 50]; // Position at the top
+    const contactPosition = [0, 67, 50]; // Position at the top
 
     // Get coin positions from Coins component
     const coinPositions = [
@@ -453,7 +453,7 @@ export const Experience = forwardRef(
           {/* Contact Trigger Area */}
           <ContactMeTrigger
             position={contactPosition}
-            size={[10, 10, 10]}
+            size={[6, 10, 6]}
             onEnter={() => {
               console.log("Entered contact area");
               setIsInContactZone(true);

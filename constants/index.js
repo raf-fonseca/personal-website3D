@@ -194,7 +194,7 @@ export const projects = [
     title: "Growie",
     description:
       "Introducing Growie: a platform where farmers and gardeners rent out land to nature lovers, letting them create and enjoy their own personalized gardens! 🌱🌿",
-    imageUrl: "/projects/growie.jpeg",
+    imageUrl: "/projects/growie.png",
     technologies: [
       "Typescript",
       "React",
@@ -208,11 +208,20 @@ export const projects = [
     githubUrl: "https://github.com/raf-fonseca/Growie",
   },
   {
-    title: "AAVE agent",
+    title: "Hack the North Frontend",
     description:
-      "A decentralized finance (DeFi) agent that interacts with the AAVE protocol to provide users with a seamless borrowing and lending experience.",
-    imageUrl: "/projects/aave.png",
-    technologies: ["Python", "Web3", "OpenAI API"],
-    githubUrl: "https://github.com/username/aave-agent",
+      "A Hack the North 2025 technical assessment that displays event data from a provided API endpoint.",
+    imageUrl: "/projects/htnFrontend.png",
+    technologies: ["Typescript", "React", "Nextjs", "Tailwindcss"],
+    liveUrl: "https://htn25.rafaelsf.com/",
+    githubUrl: "https://github.com/raf-fonseca/HTN25-Frontend-Challenge",
+  },
+  {
+    title: "Hack the North Backend",
+    description:
+      "A Flask REST API for managing hackers and their activity scans during an event.",
+    imageUrl: "/projects/htnBackend.jpeg",
+    technologies: ["Flask", "Python", "SQLite", "Docker", "SQL"],
+    githubUrl: "https://github.com/raf-fonseca/HTN25-Backend-Challenge",
   },
 ];

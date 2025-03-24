@@ -41,7 +41,7 @@ const ProjectCard = ({ project }) => {
             >
               <Button variant="island" className="flex items-center gap-2">
                 <ExternalLink size={16} />
-                Live Demo
+                Live Link
               </Button>
             </Link>
           )}
