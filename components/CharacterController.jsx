@@ -291,8 +291,8 @@ export const CharacterController = forwardRef((props, ref) => {
       const hasManualInput =
         get().forward ||
         get().backward ||
-        get().left ||
-        get().right ||
+        get().leftward ||
+        get().rightward ||
         get().up ||
         get().down;
 
@@ -361,8 +361,8 @@ export const CharacterController = forwardRef((props, ref) => {
         // Only process manual movement if not in automatic mode
         if (get().forward) horizontalMovement.z = 1;
         if (get().backward) horizontalMovement.z = -1;
-        if (get().left) horizontalMovement.x = 1;
-        if (get().right) horizontalMovement.x = -1;
+        if (get().leftward) horizontalMovement.x = 1;
+        if (get().rightward) horizontalMovement.x = -1;
         if (get().up) verticalMovement.y = 1;
         if (get().down) verticalMovement.y = -1;
 

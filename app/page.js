@@ -9,13 +9,13 @@ import Projects from "@/components/projects/page";
 import Contact from "@/components/contact/page";
 import MovementInstructions from "@/components/MovementInstructions";
 import Loader from "@/components/Loader";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 
 const keyboardMap = [
   { name: "forward", keys: ["ArrowUp", "KeyW"] },
   { name: "backward", keys: ["ArrowDown", "KeyS"] },
-  { name: "left", keys: ["ArrowLeft", "KeyA"] },
-  { name: "right", keys: ["ArrowRight", "KeyD"] },
+  { name: "leftward", keys: ["ArrowLeft", "KeyA"] },
+  { name: "rightward", keys: ["ArrowRight", "KeyD"] },
   { name: "up", keys: ["Space"] },
   { name: "down", keys: ["ShiftLeft"] },
 ];
@@ -25,7 +25,20 @@ function App() {
   const [showProjects, setShowProjects] = useState(false);
   const [showContact, setShowContact] = useState(false);
   const [isAutomaticMode, setIsAutomaticMode] = useState(false);
+  const [isManualMode, setIsManualMode] = useState(false);
   const experienceRef = useRef();
+
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (isManualMode && e.key === "Space") {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [isManualMode]);
 
   const handleWorkExperienceChange = (value) => {
     setShowWorkExperience(value);
@@ -85,7 +98,7 @@ function App() {
       {showContact && <Contact onContactChange={handleContactChange} />}
 
       {/* Canvas taking up the entire screen */}
-      <KeyboardControls map={keyboardMap} enabled={!isAutomaticMode}>
+      <KeyboardControls map={keyboardMap} enabled={isManualMode}>
         <Suspense fallback={<Loader />}>
           <Canvas
             shadows={{ type: "PCFSoftShadowMap", enabled: true }}
@@ -113,6 +126,7 @@ function App() {
               onProjectsChange={handleProjectsChange}
               onContactChange={handleContactChange}
               onAutomaticModeChange={setIsAutomaticMode}
+              isManualMode={isManualMode}
             />
           </Canvas>
         </Suspense>
@@ -120,7 +134,10 @@ function App() {
       </KeyboardControls>
 
       {/* Movement Instructions */}
-      <MovementInstructions isVisible={!isAutomaticMode} />
+      <MovementInstructions
+        isVisible={!isAutomaticMode}
+        onToggleManualMode={setIsManualMode}
+      />
     </div>
   );
 }

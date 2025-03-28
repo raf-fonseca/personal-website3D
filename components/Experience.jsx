@@ -68,6 +68,7 @@ export const Experience = forwardRef(
       onProjectsChange,
       onContactChange,
       onAutomaticModeChange,
+      isManualMode,
     },
     ref
   ) => {
@@ -85,6 +86,11 @@ export const Experience = forwardRef(
       projects: false,
       contact: false,
     });
+
+    // Update isAutomaticMode based on isManualMode
+    useEffect(() => {
+      setIsAutomaticMode(!isManualMode);
+    }, [isManualMode]);
 
     // Update parent component when isAutomaticMode changes
     useEffect(() => {
