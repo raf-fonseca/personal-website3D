@@ -99,21 +99,20 @@ export default function MovementInstructions({ onToggleManualMode }) {
             </div>
           </motion.div>
 
-          <AnimatePresence mode="popLayout">
+          <AnimatePresence mode="wait">
             {showControls && (
               <motion.div
-                initial={{ opacity: 0, scaleY: 0, originY: 0 }}
-                animate={{ opacity: 1, scaleY: 1, originY: 0 }}
-                exit={{ opacity: 0, scaleY: 0, originY: 0 }}
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
                 transition={{
                   type: "spring",
-                  stiffness: 400,
-                  damping: 30,
-                  opacity: { duration: 0.15 },
+                  stiffness: 300,
+                  damping: 25,
+                  mass: 0.8,
                 }}
                 className="bg-white/90 backdrop-blur-sm rounded-xl shadow-lg p-4 w-56"
-                layout="position"
-                layoutId="controls-panel"
+                layout
               >
                 <motion.div className="space-y-4" layout>
                   <motion.div className="space-y-2" layout>
