@@ -1,7 +1,6 @@
 "use client";
 import { useAnimations, useGLTF } from "@react-three/drei";
 import { useEffect, useRef } from "react";
-import * as THREE from "three";
 
 export const Character = ({ ...props }) => {
   const { scene, animations } = useGLTF("/3D/Robot.glb");

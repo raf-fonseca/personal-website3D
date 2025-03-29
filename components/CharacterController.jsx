@@ -9,10 +9,9 @@ import {
   useState,
   useEffect,
 } from "react";
-import { MathUtils, Vector3, DoubleSide, NormalBlending } from "three";
+import { MathUtils, Vector3 } from "three";
 import { degToRad } from "three/src/math/MathUtils.js";
 import { Character } from "./Character";
-import { useSpring, animated } from "@react-spring/three";
 import { useCoins } from "../contexts/CoinContext";
 
 const normalizeAngle = (angle) => {

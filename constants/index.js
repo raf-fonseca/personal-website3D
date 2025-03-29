@@ -117,7 +117,7 @@ export const experiences = [
   {
     title: "Software Developer",
     company: "Waterloo Reality Labs",
-    icon: "/realitylabs.png",
+    icon: "/experience/realitylabs.png",
     iconBg: "#302C23CC",
     date: "March 2025 - Present",
     points: [
@@ -128,7 +128,7 @@ export const experiences = [
   {
     title: "Software Developer",
     company: "Cineplex",
-    icon: "/cineplex.png",
+    icon: "/experience/cineplex.png",
     iconBg: "#88A6E7",
     date: "January 2025 - Present",
     points: [
@@ -139,7 +139,7 @@ export const experiences = [
   {
     title: "Frontend Developer",
     company: "Wat Street",
-    icon: "/watstreet.png",
+    icon: "/experience/watstreet.png",
     iconBg: "#DABB55",
     date: "January 2025 - Present",
     points: [
@@ -150,7 +150,7 @@ export const experiences = [
   {
     title: "Backend Developer",
     company: "SwarmZero.ai",
-    icon: "/swarmzero.png",
+    icon: "/experience/swarmzero.png",
     iconBg: "#fcf1bb",
     date: "May 2024 - August 2024",
     points: [
@@ -161,7 +161,7 @@ export const experiences = [
   {
     title: "Electrical Engineering Intern",
     company: "Toronto Met Robotics",
-    icon: "/metrobotics.png",
+    icon: "/experience/metrobotics.png",
     iconBg: "#F6817E",
     date: "September 2023 - May 2024",
     points: [

@@ -1,5 +1,4 @@
 import "./globals.css";
-import { StepProvider } from "../contexts/StepContext";
 import { CoinProvider } from "../contexts/CoinContext";
 import GoogleAnalytics from "../components/GoogleAnalytics";
 
@@ -16,9 +15,7 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body className={`antialiased`}>
         <GoogleAnalytics />
-        <StepProvider>
-          <CoinProvider>{children}</CoinProvider>
-        </StepProvider>
+        <CoinProvider>{children}</CoinProvider>
       </body>
     </html>
   );

@@ -3,7 +3,6 @@ import { useAnimations, useGLTF } from "@react-three/drei";
 import { RigidBody } from "@react-three/rapier";
 import { useEffect, useRef, useState, useMemo } from "react";
 import { useFrame } from "@react-three/fiber";
-import * as THREE from "three";
 import { useCoins } from "../contexts/CoinContext";
 
 // Load the coin model once

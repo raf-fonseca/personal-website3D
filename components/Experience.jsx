@@ -14,10 +14,10 @@ import { Coins } from "./Coins";
 import { useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
 import WelcomeSign from "./WelcomeSign";
-import WorkExperienceTrigger from "./WorkExperienceTrigger";
-import ProjectTrigger from "./ProjectTrigger";
+import WorkExperienceTrigger from "./work_experience/WorkExperienceTrigger";
+import ProjectTrigger from "./projects/ProjectTrigger";
 import MessageSign from "./MessageSign";
-import ContactMeTrigger from "./ContactMeTrigger";
+import ContactMeTrigger from "./contact/ContactMeTrigger";
 
 // Sun component with glow effect
 const Sun = ({ position = [-500, 500, -300], size = 15 }) => {
