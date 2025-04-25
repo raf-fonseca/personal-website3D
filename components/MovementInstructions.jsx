@@ -74,7 +74,7 @@ export default function MovementInstructions({ onToggleManualMode }) {
       <LayoutGroup>
         <motion.div className="flex flex-col items-center" layout>
           <motion.div
-            className="bg-white/90 backdrop-blur-sm rounded-xl shadow-lg overflow-hidden w-64 mb-4"
+            className="bg-white/90 backdrop-blur-sm rounded-xl shadow-lg overflow-hidden w-64 mb-4 hidden md:block"
             layout="position"
             layoutId="control-toggle"
           >
