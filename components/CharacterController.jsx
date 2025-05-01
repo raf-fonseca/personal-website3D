@@ -92,6 +92,20 @@ export const CharacterController = forwardRef((props, ref) => {
   const currentPathIndex = useRef(0);
   const customPath = useRef(null);
   const onPathComplete = useRef(null);
+  const [wasManualControlsJustEnabled, setWasManualControlsJustEnabled] =
+    useState(false);
+
+  // Update wasManualControlsJustEnabled when isAutomaticMode changes
+  useEffect(() => {
+    if (!props.isAutomaticMode) {
+      setWasManualControlsJustEnabled(true);
+      // Reset the flag after a short delay
+      const timer = setTimeout(() => {
+        setWasManualControlsJustEnabled(false);
+      }, 100);
+      return () => clearTimeout(timer);
+    }
+  }, [props.isAutomaticMode]);
 
   // Define work experience and projects paths
   const workExperiencePath = useRef([
@@ -295,12 +309,15 @@ export const CharacterController = forwardRef((props, ref) => {
         get().up ||
         get().down;
 
-      // If we detect manual input while following path and not in automatic mode, clear the path
-      if (hasManualInput && isFollowingPath && !props.isAutomaticMode) {
+      // If we detect manual movement input while following path and manual controls weren't just enabled, clear the path
+      if (hasManualInput && isFollowingPath && !wasManualControlsJustEnabled) {
         setIsFollowingPath(false);
         customPath.current = null;
         // Remove the completion callback when manually interrupting
         onPathComplete.current = null;
+        // Reset velocity for smooth transition to manual control
+        targetVelocity.current.set(0, 0, 0);
+        currentVelocity.current.set(0, 0, 0);
       }
 
       if (isFollowingPath) {
@@ -356,8 +373,8 @@ export const CharacterController = forwardRef((props, ref) => {
 
         // Set character rotation to face movement direction
         characterRotationTarget.current = Math.atan2(direction.x, direction.z);
-      } else if (!props.isAutomaticMode) {
-        // Only process manual movement if not in automatic mode
+      } else {
+        // Process manual movement
         if (get().forward) horizontalMovement.z = 1;
         if (get().backward) horizontalMovement.z = -1;
         if (get().leftward) horizontalMovement.x = 1;
@@ -413,9 +430,6 @@ export const CharacterController = forwardRef((props, ref) => {
         } else {
           targetVelocity.current.set(0, 0, 0);
         }
-      } else {
-        // If in automatic mode and not following path, stop all movement
-        targetVelocity.current.set(0, 0, 0);
       }
 
       currentVelocity.current.lerp(targetVelocity.current, MOVEMENT_SMOOTHING);

@@ -90,21 +90,30 @@ export default function Navbar({
           <div className="flex items-center justify-center gap-3 sm:gap-6">
             <Button
               variant="island"
-              onClick={onExperienceClick}
+              onClick={(e) => {
+                onExperienceClick();
+                e.target.blur();
+              }}
               className="text-base sm:text-xl px-6 sm:px-10 py-2 sm:py-4"
             >
               Experience
             </Button>
             <Button
               variant="island"
-              onClick={onProjectsClick}
+              onClick={(e) => {
+                onProjectsClick();
+                e.target.blur();
+              }}
               className="text-base sm:text-xl px-6 sm:px-10 py-2 sm:py-4"
             >
               Projects
             </Button>
             <Button
               variant="island"
-              onClick={onContactClick}
+              onClick={(e) => {
+                onContactClick();
+                e.target.blur();
+              }}
               className="text-base sm:text-xl px-6 sm:px-10 py-2 sm:py-4"
             >
               Contact
