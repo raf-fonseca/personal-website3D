@@ -82,7 +82,37 @@ function App() {
           onProjectsClick={handleProjectsClick}
           onContactClick={handleContactClick}
         />
+        <AnimatePresence mode="wait">
+          {isAutomaticMode && isCharacterPathing && (
+            <motion.div
+              className="w-full py-4 flex justify-center z-10"
+              initial={{ opacity: 0, y: -20 }} // Start from slightly above, faded out
+              animate={{ opacity: 1, y: 0 }} // Animate to visible and original y position
+              exit={{ opacity: 0, y: -20 }} // Animate out to slightly above, fade out
+              transition={{
+                type: 'spring',
+                stiffness: 300,
+                damping: 25,
+                mass: 0.8,
+              }}
+            >
+              <button
+                onClick={() => {
+                  if (experienceRef.current) {
+                    experienceRef.current.skipAutomaticNavigation()
+                  }
+                }}
+                className="bg-white/80 rounded-lg shadow-lg text-slate-700 font-semibold py-2 px-4 flex items-center gap-2 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-opacity-75 hover:bg-white/95 transition-colors duration-150"
+              >
+                Skip to Destination
+                <ChevronsRight className="w-4 h-4" />
+              </button>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
+
+      {/* Skip to Destination Button - Moved here for normal document flow */}
 
       {/* Work Experience Overlay */}
       {showWorkExperience && (
@@ -142,36 +172,6 @@ function App() {
         isVisible={!isAutomaticMode}
         onToggleManualMode={setIsManualMode}
       />
-
-      {/* Skip to Destination Button */}
-      <AnimatePresence mode="wait">
-        {isAutomaticMode && isCharacterPathing && (
-          <motion.div
-            className="absolute top-1/2 left-0 right-0 -translate-y-1/2 z-50 flex justify-center"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 20 }}
-            transition={{
-              type: 'spring',
-              stiffness: 300,
-              damping: 25,
-              mass: 0.8,
-            }}
-          >
-            <button
-              onClick={() => {
-                if (experienceRef.current) {
-                  experienceRef.current.skipAutomaticNavigation()
-                }
-              }}
-              className="bg-white/80 rounded-lg shadow-lg text-slate-700 font-semibold py-2 px-4 flex items-center gap-2 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-opacity-75 hover:bg-white/95 transition-colors duration-150"
-            >
-              Skip to Destination
-              <ChevronsRight className="w-4 h-4" />
-            </button>
-          </motion.div>
-        )}
-      </AnimatePresence>
     </div>
   )
 }

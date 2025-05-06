@@ -1,18 +1,18 @@
-"use client";
+'use client'
 
-import { CoinsIcon as Coin } from "lucide-react";
-import { useCoins } from "../contexts/CoinContext";
-import { Button } from "./ui/button";
-import { useEffect, useRef } from "react";
-import confetti from "canvas-confetti";
+import { CoinsIcon as Coin } from 'lucide-react'
+import { useCoins } from '../contexts/CoinContext'
+import { Button } from './ui/button'
+import { useEffect, useRef } from 'react'
+import confetti from 'canvas-confetti'
 
 export default function Navbar({
   onExperienceClick,
   onProjectsClick,
   onContactClick,
 }) {
-  const { collectedCoins, totalCoins, progressPercentage } = useCoins();
-  const prevProgressRef = useRef(progressPercentage);
+  const { collectedCoins, totalCoins, progressPercentage } = useCoins()
+  const prevProgressRef = useRef(progressPercentage)
 
   // Function to trigger confetti with multiple bursts
   const triggerConfetti = () => {
@@ -21,8 +21,8 @@ export default function Navbar({
       particleCount: 150,
       spread: 70,
       origin: { y: 0.6 },
-      colors: ["#fbbf24", "#fcd34d", "#fde68a", "#4ade80", "#34d399"],
-    });
+      colors: ['#fbbf24', '#fcd34d', '#fde68a', '#4ade80', '#34d399'],
+    })
 
     // Second burst after a short delay
     setTimeout(() => {
@@ -31,9 +31,9 @@ export default function Navbar({
         angle: 60,
         spread: 55,
         origin: { x: 0, y: 0.6 },
-        colors: ["#fbbf24", "#fcd34d", "#fde68a"],
-      });
-    }, 300);
+        colors: ['#fbbf24', '#fcd34d', '#fde68a'],
+      })
+    }, 300)
 
     // Third burst from the other side
     setTimeout(() => {
@@ -42,25 +42,25 @@ export default function Navbar({
         angle: 120,
         spread: 55,
         origin: { x: 1, y: 0.6 },
-        colors: ["#fbbf24", "#fcd34d", "#fde68a"],
-      });
-    }, 600);
-  };
+        colors: ['#fbbf24', '#fcd34d', '#fde68a'],
+      })
+    }, 600)
+  }
 
   // Check if progress has reached 100% and trigger confetti
   useEffect(() => {
     // Only trigger confetti when progress changes from less than 100 to exactly 100
     if (prevProgressRef.current < 100 && progressPercentage === 100) {
-      triggerConfetti();
+      triggerConfetti()
     }
 
     // Update the ref for the next render
-    prevProgressRef.current = progressPercentage;
-  }, [progressPercentage]);
+    prevProgressRef.current = progressPercentage
+  }, [progressPercentage])
 
   return (
     <div className="flex items-center justify-center">
-      <div className="w-full py-4 px-4 rounded-xl">
+      <div className="w-full pt-4 px-4 rounded-xl">
         <div className="grid grid-cols-1 items-center gap-3 sm:gap-6">
           {/* Progress section - centered */}
           <div className="flex items-center justify-center gap-2 sm:gap-3">
@@ -91,8 +91,8 @@ export default function Navbar({
             <Button
               variant="island"
               onClick={(e) => {
-                onExperienceClick();
-                e.target.blur();
+                onExperienceClick()
+                e.target.blur()
               }}
               className="text-base sm:text-xl px-6 sm:px-10 py-2 sm:py-4"
             >
@@ -101,8 +101,8 @@ export default function Navbar({
             <Button
               variant="island"
               onClick={(e) => {
-                onProjectsClick();
-                e.target.blur();
+                onProjectsClick()
+                e.target.blur()
               }}
               className="text-base sm:text-xl px-6 sm:px-10 py-2 sm:py-4"
             >
@@ -111,8 +111,8 @@ export default function Navbar({
             <Button
               variant="island"
               onClick={(e) => {
-                onContactClick();
-                e.target.blur();
+                onContactClick()
+                e.target.blur()
               }}
               className="text-base sm:text-xl px-6 sm:px-10 py-2 sm:py-4"
             >
@@ -122,5 +122,5 @@ export default function Navbar({
         </div>
       </div>
     </div>
-  );
+  )
 }
