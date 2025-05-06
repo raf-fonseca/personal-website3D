@@ -10,6 +10,8 @@ import Contact from '@/components/contact/page'
 import MovementInstructions from '@/components/MovementInstructions'
 import Loader from '@/components/Loader'
 import { useState, useRef, useEffect } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
+import { ChevronsRight } from 'lucide-react'
 
 const keyboardMap = [
   { name: 'forward', keys: ['ArrowUp', 'KeyW'] },
@@ -26,6 +28,7 @@ function App() {
   const [showContact, setShowContact] = useState(false)
   const [isAutomaticMode, setIsAutomaticMode] = useState(false)
   const [isManualMode, setIsManualMode] = useState(false)
+  const [isCharacterPathing, setIsCharacterPathing] = useState(false)
   const experienceRef = useRef()
 
   useEffect(() => {
@@ -127,6 +130,7 @@ function App() {
               onContactChange={handleContactChange}
               onAutomaticModeChange={setIsAutomaticMode}
               isManualMode={isManualMode}
+              onPathFollowingStatusChange={setIsCharacterPathing}
             />
           </Canvas>
         </Suspense>
@@ -138,6 +142,36 @@ function App() {
         isVisible={!isAutomaticMode}
         onToggleManualMode={setIsManualMode}
       />
+
+      {/* Skip to Destination Button */}
+      <AnimatePresence mode="wait">
+        {isAutomaticMode && isCharacterPathing && (
+          <motion.div
+            className="absolute bottom-4 left-0 right-0 z-50 flex justify-center"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 20 }}
+            transition={{
+              type: 'spring',
+              stiffness: 300,
+              damping: 25,
+              mass: 0.8,
+            }}
+          >
+            <button
+              onClick={() => {
+                if (experienceRef.current) {
+                  experienceRef.current.skipAutomaticNavigation()
+                }
+              }}
+              className="bg-white/80 backdrop-blur-md rounded-lg shadow-lg text-slate-700 font-semibold py-2 px-4 flex items-center gap-2 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-opacity-75 hover:bg-white/95 transition-colors duration-150"
+            >
+              Skip to Destination
+              <ChevronsRight className="w-4 h-4" />
+            </button>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   )
 }

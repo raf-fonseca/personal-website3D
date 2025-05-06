@@ -1,35 +1,35 @@
-"use client";
+'use client'
 import React, {
   useRef,
   useEffect,
   forwardRef,
   useImperativeHandle,
   useState,
-} from "react";
-import { Environment, OrthographicCamera, Sphere } from "@react-three/drei";
-import { Map } from "./Map";
-import { Physics } from "@react-three/rapier";
-import { CharacterController } from "./CharacterController";
-import { Coins } from "./Coins";
-import { useFrame, useThree } from "@react-three/fiber";
-import * as THREE from "three";
-import WelcomeSign from "./WelcomeSign";
-import WorkExperienceTrigger from "./work_experience/WorkExperienceTrigger";
-import ProjectTrigger from "./projects/ProjectTrigger";
-import MessageSign from "./MessageSign";
-import ContactMeTrigger from "./contact/ContactMeTrigger";
+} from 'react'
+import { Environment, OrthographicCamera, Sphere } from '@react-three/drei'
+import { Map } from './Map'
+import { Physics } from '@react-three/rapier'
+import { CharacterController } from './CharacterController'
+import { Coins } from './Coins'
+import { useFrame, useThree } from '@react-three/fiber'
+import * as THREE from 'three'
+import WelcomeSign from './WelcomeSign'
+import WorkExperienceTrigger from './work_experience/WorkExperienceTrigger'
+import ProjectTrigger from './projects/ProjectTrigger'
+import MessageSign from './MessageSign'
+import ContactMeTrigger from './contact/ContactMeTrigger'
 
 // Sun component with glow effect
 const Sun = ({ position = [-500, 500, -300], size = 15 }) => {
-  const sunRef = useRef();
+  const sunRef = useRef()
 
   // Subtle pulsing animation for the sun
   useFrame((state, delta) => {
     if (sunRef.current) {
-      const pulse = Math.sin(state.clock.elapsedTime * 0.5) * 0.05 + 1;
-      sunRef.current.scale.set(pulse, pulse, pulse);
+      const pulse = Math.sin(state.clock.elapsedTime * 0.5) * 0.05 + 1
+      sunRef.current.scale.set(pulse, pulse, pulse)
     }
-  });
+  })
 
   return (
     <group position={position}>
@@ -58,8 +58,8 @@ const Sun = ({ position = [-500, 500, -300], size = 15 }) => {
         />
       </Sphere>
     </group>
-  );
-};
+  )
+}
 
 export const Experience = forwardRef(
   (
@@ -69,102 +69,103 @@ export const Experience = forwardRef(
       onContactChange,
       onAutomaticModeChange,
       isManualMode,
+      onPathFollowingStatusChange,
     },
     ref
   ) => {
-    const shadowCameraRef = useRef();
-    const lightRef = useRef();
-    const characterRef = useRef();
-    const { scene, gl } = useThree();
-    const [isInWorkExperienceZone, setIsInWorkExperienceZone] = useState(false);
-    const [isInProjectsZone, setIsInProjectsZone] = useState(false);
-    const [isInContactZone, setIsInContactZone] = useState(false);
-    const [targetSection, setTargetSection] = useState(null);
-    const [isAutomaticMode, setIsAutomaticMode] = useState(false);
+    const shadowCameraRef = useRef()
+    const lightRef = useRef()
+    const characterRef = useRef()
+    const { scene, gl } = useThree()
+    const [isInWorkExperienceZone, setIsInWorkExperienceZone] = useState(false)
+    const [isInProjectsZone, setIsInProjectsZone] = useState(false)
+    const [isInContactZone, setIsInContactZone] = useState(false)
+    const [targetSection, setTargetSection] = useState(null)
+    const [isAutomaticMode, setIsAutomaticMode] = useState(false)
     const [visitedAreas, setVisitedAreas] = useState({
       workExperience: false,
       projects: false,
       contact: false,
-    });
+    })
 
     // Update isAutomaticMode based on isManualMode
     useEffect(() => {
-      setIsAutomaticMode(!isManualMode);
-    }, [isManualMode]);
+      setIsAutomaticMode(!isManualMode)
+    }, [isManualMode])
 
     // Update parent component when isAutomaticMode changes
     useEffect(() => {
-      onAutomaticModeChange?.(isAutomaticMode);
-    }, [isAutomaticMode, onAutomaticModeChange]);
+      onAutomaticModeChange?.(isAutomaticMode)
+    }, [isAutomaticMode, onAutomaticModeChange])
 
     // Area positions
-    const workExperiencePosition = [13.832, 35.786, 85.436]; // 6th coin position
-    const projectsPosition = [20, 51, 60.436];
-    const startingPosition = [0, 10, 0];
-    const contactPosition = [0, 67, 50]; // Position at the top
+    const workExperiencePosition = [13.832, 35.786, 85.436] // 6th coin position
+    const projectsPosition = [20, 51, 60.436]
+    const startingPosition = [0, 10, 0]
+    const contactPosition = [0, 67, 50] // Position at the top
 
-    // Get coin positions from Coins component
+    // Coin positions - MUST MATCH Coins.jsx and CharacterController.jsx
     const coinPositions = [
-      [-3.832, 23.786, 15.436],
-      [-20.832, 26.786, 30.436],
-      [-25.832, 30.786, 45.436],
-      [-20.832, 31.786, 65.436],
-      [-5.832, 33.786, 80.436],
-      [13.832, 35.786, 80.436], // 6th coin - Work Experience Target
-      [30, 35.786, 70.436],
-      [35, 38.786, 50.436],
-      [25, 40.786, 30.436],
-      [5, 40.786, 25.436],
-      [-9, 43.786, 28.436],
-      [-17, 45.786, 45.436],
-      [-17, 48.786, 60.436],
-      [-5, 48.786, 70.436],
-      [20, 53.786, 65.436], // 15th coin - Projects Target
-    ];
+      [-3.832, 23.786, 15.436], // 0
+      [-20.832, 26.786, 30.436], // 1
+      [-25.832, 30.786, 45.436], // 2
+      [-20.832, 31.786, 65.436], // 3
+      [-5.832, 33.786, 80.436], // 4
+      [13.832, 35.786, 80.436], // 5 (Work Experience Target based on old comments)
+      [30, 35.786, 70.436], // 6
+      [35, 38.786, 50.436], // 7
+      [25, 40.786, 30.436], // 8
+      [5, 40.786, 25.436], // 9
+      [-9, 43.786, 28.436], // 10
+      [-17, 45.786, 45.436], // 11
+      [-17, 48.786, 60.436], // 12
+      [-5, 48.786, 70.436], // 13
+      [20, 53.786, 65.436], // 14 (Projects Target based on old comments)
+      [22, 53.786, 50.436], // 15
+      [12, 53.786, 35.436], // 16
+      [0, 53.786, 36.436], // 17
+      [-11, 53.786, 45.436], // 18
+      [-4, 65, 51], // 19 (Contact Target based on Coins.jsx)
+    ]
 
     // Create paths for each target
     const workExperiencePath = coinPositions
       .slice(0, 6)
-      .map((pos) => new THREE.Vector3(...pos));
+      .map((pos) => new THREE.Vector3(...pos))
     const projectsPath = coinPositions
       .slice(0, 15)
-      .map((pos) => new THREE.Vector3(...pos));
-    const contactPath = [
-      ...coinPositions.slice(0, 15).map((pos) => new THREE.Vector3(...pos)),
-      new THREE.Vector3(22, 53.786, 50.436), // 16th coin
-      new THREE.Vector3(12, 53.786, 35.436), // 17th coin
-      new THREE.Vector3(0, 53.786, 35.436), // 18th coin
-      new THREE.Vector3(-11, 53.786, 45.436), // 19th coin
-      new THREE.Vector3(-4, 65, 50), // 20th coin - Contact Target
-    ];
+      .map((pos) => new THREE.Vector3(...pos))
+    const contactPath = coinPositions
+      .slice(0, 20)
+      .map((pos) => new THREE.Vector3(...pos))
 
     // Expose methods
     useImperativeHandle(ref, () => ({
       moveToWorkExperience: () => {
         if (characterRef.current) {
           if (visitedAreas.workExperience) {
-            onWorkExperienceChange(true);
-            return;
+            onWorkExperienceChange(true)
+            return
           }
-          setIsAutomaticMode(true);
-          setTargetSection("workExperience");
+          setIsAutomaticMode(true)
+          setTargetSection('workExperience')
           if (isInWorkExperienceZone) {
-            onWorkExperienceChange(true);
+            onWorkExperienceChange(true)
           } else {
-            const currentPos = characterRef.current.getCurrentPosition();
-            const startPos = new THREE.Vector3(...startingPosition);
+            const currentPos = characterRef.current.getCurrentPosition()
+            const startPos = new THREE.Vector3(...startingPosition)
             const lastCollectedPos =
-              characterRef.current.getLastCollectedCoinPosition();
+              characterRef.current.getLastCollectedCoinPosition()
 
             // If we have a last collected position, find its index in the path
-            let pathToUse = workExperiencePath;
+            let pathToUse = workExperiencePath
             if (lastCollectedPos) {
               const lastCollectedIndex = workExperiencePath.findIndex(
                 (waypoint) => waypoint.distanceTo(lastCollectedPos) < 0.1
-              );
+              )
               if (lastCollectedIndex !== -1) {
                 // Start from the next waypoint after the last collected coin
-                pathToUse = workExperiencePath.slice(lastCollectedIndex + 1);
+                pathToUse = workExperiencePath.slice(lastCollectedIndex + 1)
               }
             }
 
@@ -175,46 +176,46 @@ export const Experience = forwardRef(
                   ? currentPos
                   : new THREE.Vector3(...startingPosition),
                 ...workExperiencePath,
-              ];
+              ]
             }
 
             characterRef.current.moveToPosition(
               new THREE.Vector3(...workExperiencePosition),
               () => {
-                onWorkExperienceChange(true);
-                setTargetSection(null);
-                setIsAutomaticMode(false);
+                onWorkExperienceChange(true)
+                setTargetSection(null)
+                setIsAutomaticMode(false)
               },
               pathToUse
-            );
+            )
           }
         }
       },
       moveToProjects: () => {
         if (characterRef.current) {
           if (visitedAreas.projects) {
-            onProjectsChange(true);
-            return;
+            onProjectsChange(true)
+            return
           }
-          setIsAutomaticMode(true);
-          setTargetSection("projects");
+          setIsAutomaticMode(true)
+          setTargetSection('projects')
           if (isInProjectsZone) {
-            onProjectsChange(true);
+            onProjectsChange(true)
           } else {
-            const currentPos = characterRef.current.getCurrentPosition();
-            const startPos = new THREE.Vector3(...startingPosition);
+            const currentPos = characterRef.current.getCurrentPosition()
+            const startPos = new THREE.Vector3(...startingPosition)
             const lastCollectedPos =
-              characterRef.current.getLastCollectedCoinPosition();
+              characterRef.current.getLastCollectedCoinPosition()
 
             // If we have a last collected position, find its index in the path
-            let pathToUse = projectsPath;
+            let pathToUse = projectsPath
             if (lastCollectedPos) {
               const lastCollectedIndex = projectsPath.findIndex(
                 (waypoint) => waypoint.distanceTo(lastCollectedPos) < 0.1
-              );
+              )
               if (lastCollectedIndex !== -1) {
                 // Start from the next waypoint after the last collected coin
-                pathToUse = projectsPath.slice(lastCollectedIndex + 1);
+                pathToUse = projectsPath.slice(lastCollectedIndex + 1)
               }
             }
 
@@ -225,46 +226,46 @@ export const Experience = forwardRef(
                   ? currentPos
                   : new THREE.Vector3(...startingPosition),
                 ...projectsPath,
-              ];
+              ]
             }
 
             characterRef.current.moveToPosition(
               new THREE.Vector3(...projectsPosition),
               () => {
-                onProjectsChange(true);
-                setTargetSection(null);
-                setIsAutomaticMode(false);
+                onProjectsChange(true)
+                setTargetSection(null)
+                setIsAutomaticMode(false)
               },
               pathToUse
-            );
+            )
           }
         }
       },
       moveToContact: () => {
         if (characterRef.current) {
           if (visitedAreas.contact) {
-            onContactChange(true);
-            return;
+            onContactChange(true)
+            return
           }
-          setIsAutomaticMode(true);
-          setTargetSection("contact");
+          setIsAutomaticMode(true)
+          setTargetSection('contact')
           if (isInContactZone) {
-            onContactChange(true);
+            onContactChange(true)
           } else {
-            const currentPos = characterRef.current.getCurrentPosition();
-            const startPos = new THREE.Vector3(...startingPosition);
+            const currentPos = characterRef.current.getCurrentPosition()
+            const startPos = new THREE.Vector3(...startingPosition)
             const lastCollectedPos =
-              characterRef.current.getLastCollectedCoinPosition();
+              characterRef.current.getLastCollectedCoinPosition()
 
             // If we have a last collected position, find its index in the path
-            let pathToUse = contactPath;
+            let pathToUse = contactPath
             if (lastCollectedPos) {
               const lastCollectedIndex = contactPath.findIndex(
                 (waypoint) => waypoint.distanceTo(lastCollectedPos) < 0.1
-              );
+              )
               if (lastCollectedIndex !== -1) {
                 // Start from the next waypoint after the last collected coin
-                pathToUse = contactPath.slice(lastCollectedIndex + 1);
+                pathToUse = contactPath.slice(lastCollectedIndex + 1)
               }
             }
 
@@ -275,39 +276,47 @@ export const Experience = forwardRef(
                   ? currentPos
                   : new THREE.Vector3(...startingPosition),
                 ...contactPath,
-              ];
+              ]
             }
 
             characterRef.current.moveToPosition(
               new THREE.Vector3(...contactPosition),
               () => {
-                onContactChange(true);
-                setTargetSection(null);
-                setIsAutomaticMode(false);
+                onContactChange(true)
+                setTargetSection(null)
+                setIsAutomaticMode(false)
               },
               pathToUse
-            );
+            )
           }
         }
       },
-    }));
+      skipAutomaticNavigation: () => {
+        if (
+          characterRef.current &&
+          typeof characterRef.current.skipToEndOfPath === 'function'
+        ) {
+          characterRef.current.skipToEndOfPath()
+        }
+      },
+    }))
 
     // Configure shadow settings for the scene
     useEffect(() => {
       if (scene.environment) {
-        scene.environment.mapping = THREE.EquirectangularReflectionMapping;
+        scene.environment.mapping = THREE.EquirectangularReflectionMapping
       }
 
       // Set default up direction correctly
-      THREE.Object3D.DEFAULT_UP = new THREE.Vector3(0, 1, 0);
+      THREE.Object3D.DEFAULT_UP = new THREE.Vector3(0, 1, 0)
 
       // Optimize shadow map
       if (gl.shadowMap) {
-        gl.shadowMap.autoUpdate = true;
-        gl.shadowMap.needsUpdate = true;
-        gl.shadowMap.type = THREE.PCFSoftShadowMap;
+        gl.shadowMap.autoUpdate = true
+        gl.shadowMap.needsUpdate = true
+        gl.shadowMap.type = THREE.PCFSoftShadowMap
       }
-    }, [scene, gl]);
+    }, [scene, gl])
 
     return (
       <>
@@ -394,7 +403,7 @@ export const Experience = forwardRef(
             top={200}
             bottom={-200}
             ref={shadowCameraRef}
-            attach={"shadow-camera"}
+            attach={'shadow-camera'}
             near={10}
             far={1000}
           />
@@ -415,6 +424,7 @@ export const Experience = forwardRef(
           <CharacterController
             ref={characterRef}
             isAutomaticMode={isAutomaticMode}
+            onPathFollowingStatusChange={onPathFollowingStatusChange}
           />
           <Coins />
 
@@ -423,17 +433,17 @@ export const Experience = forwardRef(
             position={workExperiencePosition}
             size={[20, 12, 20]}
             onEnter={() => {
-              console.log("Entered work experience area");
-              setIsInWorkExperienceZone(true);
-              setVisitedAreas((prev) => ({ ...prev, workExperience: true }));
-              if (!isAutomaticMode || targetSection === "workExperience") {
-                onWorkExperienceChange(true);
+              console.log('Entered work experience area')
+              setIsInWorkExperienceZone(true)
+              setVisitedAreas((prev) => ({ ...prev, workExperience: true }))
+              if (!isAutomaticMode || targetSection === 'workExperience') {
+                onWorkExperienceChange(true)
               }
             }}
             onExit={() => {
-              console.log("Exited work experience area");
-              setIsInWorkExperienceZone(false);
-              onWorkExperienceChange(false);
+              console.log('Exited work experience area')
+              setIsInWorkExperienceZone(false)
+              onWorkExperienceChange(false)
             }}
           />
 
@@ -442,17 +452,17 @@ export const Experience = forwardRef(
             position={projectsPosition}
             size={[20, 8, 25]}
             onEnter={() => {
-              console.log("Entered projects area");
-              setIsInProjectsZone(true);
-              setVisitedAreas((prev) => ({ ...prev, projects: true }));
-              if (!isAutomaticMode || targetSection === "projects") {
-                onProjectsChange(true);
+              console.log('Entered projects area')
+              setIsInProjectsZone(true)
+              setVisitedAreas((prev) => ({ ...prev, projects: true }))
+              if (!isAutomaticMode || targetSection === 'projects') {
+                onProjectsChange(true)
               }
             }}
             onExit={() => {
-              console.log("Exited projects area");
-              setIsInProjectsZone(false);
-              onProjectsChange(false);
+              console.log('Exited projects area')
+              setIsInProjectsZone(false)
+              onProjectsChange(false)
             }}
           />
 
@@ -461,23 +471,23 @@ export const Experience = forwardRef(
             position={contactPosition}
             size={[6, 10, 6]}
             onEnter={() => {
-              console.log("Entered contact area");
-              setIsInContactZone(true);
-              setVisitedAreas((prev) => ({ ...prev, contact: true }));
-              if (!isAutomaticMode || targetSection === "contact") {
-                onContactChange(true);
+              console.log('Entered contact area')
+              setIsInContactZone(true)
+              setVisitedAreas((prev) => ({ ...prev, contact: true }))
+              if (!isAutomaticMode || targetSection === 'contact') {
+                onContactChange(true)
               }
             }}
             onExit={() => {
-              console.log("Exited contact area");
-              setIsInContactZone(false);
-              onContactChange(false);
+              console.log('Exited contact area')
+              setIsInContactZone(false)
+              onContactChange(false)
             }}
           />
         </Physics>
       </>
-    );
+    )
   }
-);
+)
 
-export default Experience;
+export default Experience

@@ -36,6 +36,7 @@ const lerpAngle = (start, end, t) => {
 }
 
 export const CharacterController = forwardRef((props, ref) => {
+  const { onPathFollowingStatusChange } = props
   // Fixed values instead of controls
   const FLIGHT_SPEED = 30
   const VERTICAL_SPEED = 20
@@ -45,23 +46,28 @@ export const CharacterController = forwardRef((props, ref) => {
   const MOVEMENT_SMOOTHING = 0.05
   const ROTATION_SMOOTHING = 0.08
 
-  // Define coin positions at component scope
+  // Define coin positions at component scope - MUST MATCH Coins.jsx
   const coinPositions = [
-    [-3.832, 23.786, 15.436], // 1st coin
-    [-20.832, 26.786, 30.436], // 2nd coin
-    [-25.832, 30.786, 45.436], // 3rd coin
-    [-20.832, 31.786, 65.436], // 4th coin
-    [-5.832, 33.786, 80.436], // 5th coin
-    [13.832, 35.786, 80.436], // 6th coin
-    [30, 35.786, 70.436], // 7th coin
-    [35, 38.786, 50.436], // 8th coin
-    [25, 40.786, 30.436], // 9th coin
-    [5, 40.786, 25.436], // 10th coin
-    [-9, 43.786, 28.436], // 11th coin
-    [-17, 45.786, 45.436], // 12th coin
-    [-17, 48.786, 60.436], // 13th coin
-    [-5, 48.786, 70.436], // 14th coin
-    [20, 53.786, 65.436], // 15th coin
+    [-3.832, 23.786, 15.436], // 0
+    [-20.832, 26.786, 30.436], // 1
+    [-25.832, 30.786, 45.436], // 2
+    [-20.832, 31.786, 65.436], // 3
+    [-5.832, 33.786, 80.436], // 4
+    [13.832, 35.786, 80.436], // 5
+    [30, 35.786, 70.436], // 6
+    [35, 38.786, 50.436], // 7
+    [25, 40.786, 30.436], // 8
+    [5, 40.786, 25.436], // 9
+    [-9, 43.786, 28.436], // 10
+    [-17, 45.786, 45.436], // 11
+    [-17, 48.786, 60.436], // 12
+    [-5, 48.786, 70.436], // 13
+    [20, 53.786, 65.436], // 14
+    [22, 53.786, 50.436], // 15
+    [12, 53.786, 35.436], // 16
+    [0, 53.786, 36.436], // 17
+    [-11, 53.786, 45.436], // 18
+    [-4, 65, 51], // 19
   ]
 
   const rb = useRef()
@@ -94,6 +100,10 @@ export const CharacterController = forwardRef((props, ref) => {
   const onPathComplete = useRef(null)
   const [wasManualControlsJustEnabled, setWasManualControlsJustEnabled] =
     useState(false)
+
+  useEffect(() => {
+    onPathFollowingStatusChange?.(isFollowingPath)
+  }, [isFollowingPath, onPathFollowingStatusChange])
 
   // Update wasManualControlsJustEnabled when isAutomaticMode changes
   useEffect(() => {
@@ -292,9 +302,104 @@ export const CharacterController = forwardRef((props, ref) => {
     },
     getCollectedCoins: () => collectedCoins,
     getLastCollectedCoinPosition: () => lastCollectedCoinPosition.current,
+    skipToEndOfPath: () => {
+      if (
+        isFollowingPath &&
+        customPath.current &&
+        customPath.current.length > 0 &&
+        rb.current &&
+        character.current &&
+        container.current &&
+        cameraPosition.current &&
+        cameraTarget.current
+      ) {
+        const endPosition = customPath.current[customPath.current.length - 1]
+        if (!endPosition) return
+
+        // Collect coins along the skipped path, EXCLUDING THE VERY LAST ONE
+        if (customPath.current && customPath.current.length > 0) {
+          const alreadyCollectedSet = new Set(collectedCoins)
+          const uniqueNewCoinIdsToCollect = new Set()
+
+          const pathLength = customPath.current.length
+          // Iterate up to the second to last waypoint.
+          // If path has only 1 waypoint (direct to destination), this loop won't run.
+          // The destination coin will be collected by its own trigger in Coins.jsx upon teleport.
+          for (let i = 0; i < pathLength - 1; i++) {
+            const waypoint = customPath.current[i]
+            // Check this waypoint against all known coin positions
+            coinPositions.forEach((coinPosArr, coinId) => {
+              const coinPositionVec = new Vector3(
+                coinPosArr[0],
+                coinPosArr[1],
+                coinPosArr[2]
+              )
+              if (waypoint.distanceTo(coinPositionVec) < 0.1) {
+                if (!alreadyCollectedSet.has(coinId)) {
+                  uniqueNewCoinIdsToCollect.add(coinId)
+                }
+              }
+            })
+          }
+
+          uniqueNewCoinIdsToCollect.forEach((coinId) => {
+            collectCoin(coinId)
+          })
+        }
+
+        // 1. Teleport RigidBody
+        rb.current.setTranslation(
+          new Vector3(endPosition.x, endPosition.y, endPosition.z),
+          true
+        )
+
+        // 2. Reset physics velocities
+        targetVelocity.current.set(0, 0, 0)
+        currentVelocity.current.set(0, 0, 0)
+
+        // 3. Set desired final rotation targets
+        characterRotationTarget.current = Math.PI
+        rotationTarget.current = Math.PI
+
+        // 4. Apply these rotations DIRECTLY to the visual and container groups
+        character.current.rotation.y = characterRotationTarget.current
+        container.current.rotation.y = rotationTarget.current
+
+        // 5. Clear path following state (this changes camera logic in useFrame)
+        setIsFollowingPath(false)
+        customPath.current = null
+        currentPathIndex.current = 0
+
+        // 6. Set local positions for camera helpers (manual/default mode camera configuration)
+        // These are relative to the container, which has already teleported and rotated.
+        cameraPosition.current.position.set(0, 30, -50)
+        cameraTarget.current.position.set(0, 0, 25)
+
+        // 7. Force matrix updates as parent (container) and helpers have new transforms
+        container.current.updateMatrixWorld(true) // Update parent's world matrix first
+        cameraPosition.current.updateMatrixWorld(true)
+        cameraTarget.current.updateMatrixWorld(true)
+
+        // 8. Get the final world positions of camera helpers using the existing refs
+        cameraPosition.current.getWorldPosition(cameraWorldPosition.current)
+        cameraTarget.current.getWorldPosition(cameraLookAtWorldPosition.current)
+
+        // 9. Apply directly to the main THREE.js camera
+        camera.position.copy(cameraWorldPosition.current)
+        camera.lookAt(cameraLookAtWorldPosition.current)
+        camera.updateProjectionMatrix() // Good practice after camera transform changes
+
+        // 10. Execute and clear the completion callback
+        if (onPathComplete.current) {
+          onPathComplete.current()
+          onPathComplete.current = null
+        }
+      }
+    },
   }))
 
-  useFrame(({ camera }) => {
+  useFrame(({ camera: frameCamera }) => {
+    // Renamed to avoid conflict with camera from useThree in this scope if not careful
     if (rb.current) {
       let horizontalMovement = { x: 0, z: 0 }
       let verticalMovement = { y: 0 }
@@ -509,7 +614,7 @@ export const CharacterController = forwardRef((props, ref) => {
       )
 
       cameraPosition.current.getWorldPosition(cameraWorldPosition.current)
-      camera.position.lerp(cameraWorldPosition.current, MOVEMENT_SMOOTHING)
+      frameCamera.position.lerp(cameraWorldPosition.current, MOVEMENT_SMOOTHING)
 
       if (cameraTarget.current) {
         cameraTarget.current.getWorldPosition(cameraLookAtWorldPosition.current)
@@ -518,7 +623,7 @@ export const CharacterController = forwardRef((props, ref) => {
           MOVEMENT_SMOOTHING
         )
 
-        camera.lookAt(cameraLookAt.current)
+        frameCamera.lookAt(cameraLookAt.current)
       }
     }
   })
