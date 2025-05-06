@@ -147,7 +147,7 @@ function App() {
       <AnimatePresence mode="wait">
         {isAutomaticMode && isCharacterPathing && (
           <motion.div
-            className="absolute bottom-4 left-0 right-0 z-50 flex justify-center"
+            className="absolute top-1/2 left-0 right-0 -translate-y-1/2 z-50 flex justify-center"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 20 }}
