@@ -164,7 +164,7 @@ function App() {
                   experienceRef.current.skipAutomaticNavigation()
                 }
               }}
-              className="bg-white/80 backdrop-blur-md rounded-lg shadow-lg text-slate-700 font-semibold py-2 px-4 flex items-center gap-2 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-opacity-75 hover:bg-white/95 transition-colors duration-150"
+              className="bg-white/80 rounded-lg shadow-lg text-slate-700 font-semibold py-2 px-4 flex items-center gap-2 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-opacity-75 hover:bg-white/95 transition-colors duration-150"
             >
               Skip to Destination
               <ChevronsRight className="w-4 h-4" />
