@@ -1,7 +1,7 @@
-"use client";
-import { RigidBody } from "@react-three/rapier";
-import { useState } from "react";
-import * as THREE from "three";
+'use client'
+import { RigidBody } from '@react-three/rapier'
+import { useState } from 'react'
+import * as THREE from 'three'
 
 export function ContactMeTrigger({
   position = [0, 0, 0],
@@ -9,7 +9,7 @@ export function ContactMeTrigger({
   onEnter,
   onExit,
 }) {
-  const [playerInside, setPlayerInside] = useState(false);
+  const [playerInside, setPlayerInside] = useState(false)
 
   return (
     <RigidBody
@@ -18,15 +18,15 @@ export function ContactMeTrigger({
       sensor
       position={position}
       onIntersectionEnter={(e) => {
-        if (e.other.rigidBodyObject?.name === "character" && !playerInside) {
-          setPlayerInside(true);
-          onEnter?.();
+        if (e.other.rigidBodyObject?.name === 'character' && !playerInside) {
+          setPlayerInside(true)
+          onEnter?.()
         }
       }}
       onIntersectionExit={(e) => {
-        if (e.other.rigidBodyObject?.name === "character" && playerInside) {
-          setPlayerInside(false);
-          onExit?.();
+        if (e.other.rigidBodyObject?.name === 'character' && playerInside) {
+          setPlayerInside(false)
+          onExit?.()
         }
       }}
     >
@@ -35,12 +35,12 @@ export function ContactMeTrigger({
         <boxGeometry args={size} />
         <meshStandardMaterial
           transparent={true}
-          opacity={0}
+          opacity={0.1}
           side={2} // Makes the box visible from inside and outside
         />
       </mesh>
     </RigidBody>
-  );
+  )
 }
 
-export default ContactMeTrigger;
+export default ContactMeTrigger

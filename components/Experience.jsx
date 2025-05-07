@@ -184,7 +184,6 @@ export const Experience = forwardRef(
               () => {
                 onWorkExperienceChange(true)
                 setTargetSection(null)
-                setIsAutomaticMode(false)
               },
               pathToUse
             )
@@ -234,7 +233,6 @@ export const Experience = forwardRef(
               () => {
                 onProjectsChange(true)
                 setTargetSection(null)
-                setIsAutomaticMode(false)
               },
               pathToUse
             )
@@ -284,7 +282,6 @@ export const Experience = forwardRef(
               () => {
                 onContactChange(true)
                 setTargetSection(null)
-                setIsAutomaticMode(false)
               },
               pathToUse
             )

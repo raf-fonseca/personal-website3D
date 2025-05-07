@@ -1,6 +1,6 @@
-"use client";
-import { RigidBody } from "@react-three/rapier";
-import { useState } from "react";
+'use client'
+import { RigidBody } from '@react-three/rapier'
+import { useState } from 'react'
 
 export function ProjectTrigger({
   position = [0, 0, 50],
@@ -8,7 +8,7 @@ export function ProjectTrigger({
   onEnter,
   onExit,
 }) {
-  const [playerInside, setPlayerInside] = useState(false);
+  const [playerInside, setPlayerInside] = useState(false)
 
   return (
     <RigidBody
@@ -17,15 +17,15 @@ export function ProjectTrigger({
       sensor
       position={position}
       onIntersectionEnter={(e) => {
-        if (e.other.rigidBodyObject?.name === "character" && !playerInside) {
-          setPlayerInside(true);
-          onEnter?.();
+        if (e.other.rigidBodyObject?.name === 'character' && !playerInside) {
+          setPlayerInside(true)
+          onEnter?.()
         }
       }}
       onIntersectionExit={(e) => {
-        if (e.other.rigidBodyObject?.name === "character" && playerInside) {
-          setPlayerInside(false);
-          onExit?.();
+        if (e.other.rigidBodyObject?.name === 'character' && playerInside) {
+          setPlayerInside(false)
+          onExit?.()
         }
       }}
     >
@@ -34,12 +34,12 @@ export function ProjectTrigger({
         <boxGeometry args={size} />
         <meshStandardMaterial
           transparent={true}
-          opacity={0}
+          opacity={0.1}
           side={2} // Makes the box visible from inside and outside
         />
       </mesh>
     </RigidBody>
-  );
+  )
 }
 
-export default ProjectTrigger;
+export default ProjectTrigger
