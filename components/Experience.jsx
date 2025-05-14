@@ -428,7 +428,7 @@ export const Experience = forwardRef(
           {/* Work Experience Trigger Area */}
           <WorkExperienceTrigger
             position={workExperiencePosition}
-            size={[20, 12, 20]}
+            size={[25, 12, 20]}
             onEnter={() => {
               console.log('Entered work experience area')
               setIsInWorkExperienceZone(true)
@@ -447,7 +447,7 @@ export const Experience = forwardRef(
           {/* Projects Trigger Area */}
           <ProjectTrigger
             position={projectsPosition}
-            size={[20, 8, 25]}
+            size={[25, 8, 25]}
             onEnter={() => {
               console.log('Entered projects area')
               setIsInProjectsZone(true)
