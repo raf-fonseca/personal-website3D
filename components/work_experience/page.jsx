@@ -63,8 +63,7 @@ const WorkExperience = ({ onWorkExperienceChange }) => {
               <p className="text-lg text-muted-foreground">
                 I am a Software Developer studying Computer Engineering at the
                 University of Waterloo. My passion for learning has led me to
-                explore virtual reality, neural networks, and full-stack
-                development.
+                explore virtual reality, ML, and full-stack development.
               </p>
               <div className="flex justify-center gap-4">
                 {socialLinks.map((social) => (
