@@ -119,7 +119,7 @@ export const experiences = [
     company: "Shopify",
     icon: "/experience/shopify2.png",
     iconBg: "#B3D585",
-    date: "",
+    date: "September 2025 - Present",
     points: ["Coming Soon Fall 2025! "],
   },
   {
@@ -127,7 +127,7 @@ export const experiences = [
     company: "Hugging Face",
     icon: "/experience/huggingface4.png",
     iconBg: "#ffd21fcc",
-    date: "",
+    date: "May 2025 - August 2025",
     points: [
       "Shipped a vision model that creates 3D structures from 1–2 input images, reaching 98% accuracy parity with the original research model.",
       "Inherited core components from Hugging Face’s Vision Transformer model, cutting ∼40% of code.",
@@ -149,7 +149,7 @@ export const experiences = [
     company: "Cineplex",
     icon: "/experience/cineplex.png",
     iconBg: "#88A6E7",
-    date: "January 2025 - Present",
+    date: "January 2025 - April 2025",
     points: [
       "Accomplished $4800+ in annual savings and reduced the codebase by 500+ lines by identifying and implementing an optimal API for fetching live stock data.",
       "Modernized a primarily manual card creation process, improving efficiency by 70%+ through direct integration with an external API for cloud storage.",
@@ -160,7 +160,7 @@ export const experiences = [
     company: "Wat Street",
     icon: "/experience/watstreet.png",
     iconBg: "#DABB55",
-    date: "January 2025 - Present",
+    date: "January 2025 - April 2025",
     points: [
       "Significantly reduced page load times resulting in 40%+ improvement in data retrieval speed by implementing server-side data fetching.",
       "Accomplished dynamic retrieval of daily, weekly, and monthly stock data, by integrating an external API and leveraging query parameters based on user input.",
