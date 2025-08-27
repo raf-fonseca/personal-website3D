@@ -128,7 +128,10 @@ export const experiences = [
     icon: "/experience/huggingface4.png",
     iconBg: "#ffd21fcc",
     date: "",
-    points: [""],
+    points: [
+      "Shipped a vision model that creates 3D structures from 1–2 input images, reaching 98% accuracy parity with the original research model.",
+      "Inherited core components from Hugging Face’s Vision Transformer model, cutting ∼40% of code.",
+    ],
   },
   {
     title: "VR Software Lead",
