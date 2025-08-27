@@ -120,7 +120,7 @@ export const experiences = [
     icon: "/experience/shopify2.png",
     iconBg: "#B3D585",
     date: "September 2025 - Present",
-    points: ["Coming Soon Fall 2025! "],
+    points: ["Incoming Fall 2025 on the AI Assistants Team (Sidekick)!"],
   },
   {
     title: "Machine Learning Scholar",
@@ -134,7 +134,7 @@ export const experiences = [
     ],
   },
   {
-    title: "VR Software Lead",
+    title: "VR Software Lead (Humanoid Team)",
     company: "Waterloo Reality Labs",
     icon: "/experience/realitylabs.png",
     iconBg: "#302C23CC",
