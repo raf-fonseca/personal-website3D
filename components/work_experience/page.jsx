@@ -83,21 +83,19 @@ const WorkExperience = ({ onWorkExperienceChange }) => {
                 ))}
               </div>
             </section>
-
-            {/* Skills Section */}
-            <section className="space-y-8">
-              <h2 className="text-3xl font-bold text-black dark:text-white">
-                Skills
-              </h2>
-              <SkillsGrid />
-            </section>
-
             {/* Work Experience Section */}
             <section className="space-y-8">
               <h2 className="text-3xl font-bold text-black dark:text-white">
                 Work Experience
               </h2>
               <ExperienceTimeline />
+            </section>
+            {/* Skills Section */}
+            <section className="space-y-8">
+              <h2 className="text-3xl font-bold text-black dark:text-white">
+                Skills
+              </h2>
+              <SkillsGrid />
             </section>
           </main>
         </div>
