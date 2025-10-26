@@ -120,7 +120,9 @@ export const experiences = [
     icon: "/experience/shopify2.png",
     iconBg: "#B3D585",
     date: "September 2025 - Present",
-    points: ["Incoming Fall 2025 on the AI Assistants Team (Sidekick)!"],
+    points: [
+      "Achieved ∼40ms inference for autocomplete suggestions by using supervised fine-tuning to train Qwen2.5-0.5B",
+    ],
   },
   {
     title: "Machine Learning Scholar",
