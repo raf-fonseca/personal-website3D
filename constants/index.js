@@ -122,6 +122,7 @@ export const experiences = [
     date: "September 2025 - Present",
     points: [
       "Achieved ∼40ms inference for autocomplete suggestions by using supervised fine-tuning to train Qwen2.5-0.5B",
+      "Reduced model hallucinations by ∼50% by designing SQL queries with regex pattern matching to preprocess 220k+ training examples from production conversation records",
     ],
   },
   {
