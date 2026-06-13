@@ -119,7 +119,17 @@ export const experiences = [
     company: "Shopify",
     icon: "/experience/shopify2.png",
     iconBg: "#B3D585",
-    date: "September 2025 - Present",
+    date: "May 2026 - Present",
+    points: [
+      "Accomplished an 86% token reduction in page context sent to Sidekick by building a page-to-markdown serializer, exposed through an RPC handler and an SSE-backed get page context tool",
+    ],
+  },
+  {
+    title: "Software Engineering Intern",
+    company: "Shopify",
+    icon: "/experience/shopify2.png",
+    iconBg: "#B3D585",
+    date: "September 2025 - December 2025",
     points: [
       "Achieved ∼40ms inference for autocomplete suggestions by using supervised fine-tuning to train Qwen2.5-0.5B",
       "Reduced model hallucinations by ∼50% by designing SQL queries with regex pattern matching to preprocess 220k+ training examples from production conversation records",
