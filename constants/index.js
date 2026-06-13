@@ -151,7 +151,7 @@ export const experiences = [
     company: "Waterloo Reality Labs",
     icon: "/experience/realitylabs.png",
     iconBg: "#302C23CC",
-    date: "March 2025 - Present",
+    date: "March 2025 - March 2026",
     points: [
       "Accomplished a ~0.3ms latency data exchange between a humanoid robot and VR client for teleoperation by integrating Meta SDK hand tracking with a WebSocket server.",
       "Achieved 99.9% accuracy by training a feed-forward neural network in PyTorch to classify RGB colors as warm or cool.",
