@@ -125,6 +125,16 @@ export const experiences = [
     ],
   },
   {
+    title: "Machine Learning Lead",
+    company: "Wat.ai",
+    icon: "/experience/wat_ai_logo.jpeg",
+    iconBg: "#fad350",
+    date: "May 2025 - Present",
+    points: [
+      "Semantic Object State Understanding",
+    ],
+  },
+  {
     title: "Software Engineering Intern",
     company: "Shopify",
     icon: "/experience/shopify2.png",
