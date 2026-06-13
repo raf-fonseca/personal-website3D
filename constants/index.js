@@ -131,7 +131,7 @@ export const experiences = [
     iconBg: "#fad350",
     date: "May 2025 - Present",
     points: [
-      "Semantic Object State Understanding",
+      "Semantic Object State Tracking",
     ],
   },
   {
@@ -248,22 +248,5 @@ export const projects = [
     ],
     liveUrl: "https://growie.rafaelsf.com/",
     githubUrl: "https://github.com/raf-fonseca/Growie",
-  },
-  {
-    title: "Hack the North Frontend",
-    description:
-      "A Hack the North 2025 technical assessment that displays event data from a provided API endpoint.",
-    imageUrl: "/projects/htnFrontend.png",
-    technologies: ["Typescript", "React", "Nextjs", "Tailwindcss"],
-    liveUrl: "https://htn25.rafaelsf.com/",
-    githubUrl: "https://github.com/raf-fonseca/HTN25-Frontend-Challenge",
-  },
-  {
-    title: "Hack the North Backend",
-    description:
-      "A Flask REST API for managing hackers and their activity scans during an event.",
-    imageUrl: "/projects/htnBackend.jpeg",
-    technologies: ["Flask", "Python", "SQLite", "Docker", "SQL"],
-    githubUrl: "https://github.com/raf-fonseca/HTN25-Backend-Challenge",
   },
 ];
