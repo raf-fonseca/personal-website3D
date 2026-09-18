@@ -17,7 +17,14 @@ const ProjectCard = ({ project }) => {
       </div>
       <div className="flex w-full flex-col justify-between md:w-3/5">
         <div className="space-y-4">
-          <h2 className="text-xl font-bold text-gray-600">{project.title}</h2>
+          <div className="flex flex-wrap items-center gap-2">
+            <h2 className="text-xl font-bold text-gray-600">{project.title}</h2>
+            {project.achievement && (
+              <span className="rounded-full bg-yellow-100 px-3 py-1 text-xs font-semibold text-yellow-800">
+                🏆 {project.achievement}
+              </span>
+            )}
+          </div>
           <p className="text-md text-gray-600">{project.description}</p>
 
           <div className="flex flex-wrap gap-2 pt-2">

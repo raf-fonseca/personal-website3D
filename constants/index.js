@@ -233,20 +233,20 @@ export const socialLinks = [
 
 export const projects = [
   {
-    title: "Growie",
+    title: "ShipIt",
+    achievement: "1st Place · Google AI Hackathon",
     description:
-      "Introducing Growie: a platform where farmers and gardeners rent out land to nature lovers, letting them create and enjoy their own personalized gardens! 🌱🌿",
-    imageUrl: "/projects/growie.png",
+      "An AI-powered Figma assistant that provides intelligent component suggestions, automated design feedback, and AI-powered design tools.",
+    imageUrl: "/projects/shipit.png",
     technologies: [
-      "Typescript",
-      "React",
-      "Nextjs",
-      "Prisma",
-      "MongoDB",
-      "Next Auth",
-      "Tailwindcss",
+      "TypeScript",
+      "Figma Plugin API",
+      "Python",
+      "FastAPI",
+      "Gemini 2.5 Flash",
+      "Vertex AI",
+      "Google ADK",
     ],
-    liveUrl: "https://growie.rafaelsf.com/",
-    githubUrl: "https://github.com/raf-fonseca/Growie",
+    githubUrl: "https://github.com/HarrisonFulford/shipit",
   },
 ];
