@@ -233,6 +233,14 @@ export const socialLinks = [
 
 export const projects = [
   {
+    title: "Checkmate",
+    description:
+      "Built a hybrid Neural Network and Monte Carlo Tree Search chess engine (~2000 elo)",
+    imageUrl: "/projects/checkmate.png",
+    technologies: ["Python", "PyTorch", "MCTS", "Modal", "Hugging Face"],
+    githubUrl: "https://github.com/michaelmazilu/checkmate",
+  },
+  {
     title: "ShipIt",
     achievement: "1st Place · Google AI Hackathon",
     description:
