@@ -244,7 +244,7 @@ export const projects = [
     title: "ShipIt",
     achievement: "1st Place · Google AI Hackathon",
     description:
-      "An AI-powered Figma assistant that provides intelligent component suggestions, automated design feedback, and AI-powered design tools.",
+      "Built autocomplete for Figma",
     imageUrl: "/projects/shipit.png",
     technologies: [
       "TypeScript",
