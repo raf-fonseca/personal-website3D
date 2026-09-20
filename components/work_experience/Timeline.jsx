@@ -57,9 +57,14 @@ const TimelineItem = ({ item, index }) => {
           <p className="text-gray-600 dark:text-gray-300 font-medium">
             {item.company}
           </p>
-          <p className="text-sm text-gray-500 dark:text-gray-400 mt-4">
+          <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">
             {item.date}
           </p>
+          {item.blurb && (
+            <p className="text-gray-600 dark:text-gray-400 mt-4">
+              {item.blurb}
+            </p>
+          )}
         </motion.div>
       </div>
 
@@ -83,6 +88,11 @@ const TimelineItem = ({ item, index }) => {
               <p className="text-gray-600 dark:text-gray-300 font-medium">
                 {item.company}
               </p>
+              {item.blurb && (
+                <p className="text-gray-600 dark:text-gray-400 mt-4">
+                  {item.blurb}
+                </p>
+              )}
             </motion.div>
           ) : (
             <motion.p
@@ -151,6 +161,11 @@ const TimelineItem = ({ item, index }) => {
               <p className="text-gray-600 dark:text-gray-300 font-medium">
                 {item.company}
               </p>
+              {item.blurb && (
+                <p className="text-gray-600 dark:text-gray-400 mt-4">
+                  {item.blurb}
+                </p>
+              )}
             </motion.div>
           )}
         </div>

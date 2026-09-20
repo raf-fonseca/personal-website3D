@@ -117,13 +117,15 @@ export const experiences = [
   {
     title: "Software Engineering Intern",
     company: "Shopify",
+    blurb: "LLM judges for evals",
     icon: "/experience/shopify2.png",
     iconBg: "#B3D585",
-    date: "May 2026 - Present",
+    date: "May 2026 - August 2026",
   },
   {
     title: "Machine Learning Lead",
     company: "Wat.ai",
+    blurb: "Semantic object state tracking",
     icon: "/experience/wat_ai_logo.jpeg",
     iconBg: "#fad350",
     date: "May 2025 - Present",
@@ -131,6 +133,7 @@ export const experiences = [
   {
     title: "Machine Learning Engineering Intern",
     company: "Shopify",
+    blurb: "Fine-tuned low latency models",
     icon: "/experience/shopify2.png",
     iconBg: "#B3D585",
     date: "September 2025 - December 2025",
@@ -138,6 +141,7 @@ export const experiences = [
   {
     title: "Machine Learning Scholar",
     company: "Hugging Face",
+    blurb: "Vision models for depth mapping",
     icon: "/experience/huggingface4.png",
     iconBg: "#ffd21fcc",
     date: "May 2025 - August 2025",
@@ -147,6 +151,7 @@ export const experiences = [
     company: "Waterloo Reality Labs",
     icon: "/experience/realitylabs.png",
     iconBg: "#302C23CC",
+    blurb: "VR data capture for humanoid training",
     date: "March 2025 - March 2026",
   },
   {
