@@ -152,6 +152,7 @@ export const experiences = [
     icon: "/experience/realitylabs.png",
     iconBg: "#302C23CC",
     blurb: "VR data capture for humanoid training",
+    link: "https://www.watonomous.ca/projects/humanoid",
     date: "March 2025 - March 2026",
   },
   {
