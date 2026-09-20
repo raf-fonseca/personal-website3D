@@ -120,9 +120,6 @@ export const experiences = [
     icon: "/experience/shopify2.png",
     iconBg: "#B3D585",
     date: "May 2026 - Present",
-    points: [
-      "Accomplished an 86% token reduction in page context sent to Sidekick by building a page-to-markdown serializer, exposed through an RPC handler and an SSE-backed get page context tool",
-    ],
   },
   {
     title: "Machine Learning Lead",
@@ -130,20 +127,13 @@ export const experiences = [
     icon: "/experience/wat_ai_logo.jpeg",
     iconBg: "#fad350",
     date: "May 2025 - Present",
-    points: [
-      "Semantic Object State Tracking",
-    ],
   },
   {
-    title: "Software Engineering Intern",
+    title: "Machine Learning Engineering Intern",
     company: "Shopify",
     icon: "/experience/shopify2.png",
     iconBg: "#B3D585",
     date: "September 2025 - December 2025",
-    points: [
-      "Achieved ∼40ms inference for autocomplete suggestions by using supervised fine-tuning to train Qwen2.5-0.5B",
-      "Reduced model hallucinations by ∼50% by designing SQL queries with regex pattern matching to preprocess 220k+ training examples from production conversation records",
-    ],
   },
   {
     title: "Machine Learning Scholar",
@@ -151,10 +141,6 @@ export const experiences = [
     icon: "/experience/huggingface4.png",
     iconBg: "#ffd21fcc",
     date: "May 2025 - August 2025",
-    points: [
-      "Shipped a vision model that creates 3D structures from 1–2 input images, reaching 98% accuracy parity with the original research model.",
-      "Inherited core components from Hugging Face’s Vision Transformer model, cutting ∼40% of code.",
-    ],
   },
   {
     title: "VR Software Lead (Humanoid Team)",
@@ -162,10 +148,6 @@ export const experiences = [
     icon: "/experience/realitylabs.png",
     iconBg: "#302C23CC",
     date: "March 2025 - March 2026",
-    points: [
-      "Accomplished a ~0.3ms latency data exchange between a humanoid robot and VR client for teleoperation by integrating Meta SDK hand tracking with a WebSocket server.",
-      "Achieved 99.9% accuracy by training a feed-forward neural network in PyTorch to classify RGB colors as warm or cool.",
-    ],
   },
   {
     title: "Software Engineering Intern ",
@@ -173,10 +155,6 @@ export const experiences = [
     icon: "/experience/cineplex.png",
     iconBg: "#88A6E7",
     date: "January 2025 - April 2025",
-    points: [
-      "Accomplished $4800+ in annual savings and reduced the codebase by 500+ lines by identifying and implementing an optimal API for fetching live stock data.",
-      "Modernized a primarily manual card creation process, improving efficiency by 70%+ through direct integration with an external API for cloud storage.",
-    ],
   },
   {
     title: "Frontend Developer",
@@ -184,10 +162,6 @@ export const experiences = [
     icon: "/experience/watstreet.png",
     iconBg: "#DABB55",
     date: "January 2025 - April 2025",
-    points: [
-      "Significantly reduced page load times resulting in 40%+ improvement in data retrieval speed by implementing server-side data fetching.",
-      "Accomplished dynamic retrieval of daily, weekly, and monthly stock data, by integrating an external API and leveraging query parameters based on user input.",
-    ],
   },
   {
     title: "Software Engineering Intern",
@@ -195,10 +169,6 @@ export const experiences = [
     icon: "/experience/swarmzero.png",
     iconBg: "#fcf1bb",
     date: "May 2024 - August 2024",
-    points: [
-      "Improved DeFi protocols by developing an AAVE agent on the Sepolia Testnet, achieving a 90% increase in efficiency by securely storing user info and enabling easy transaction specifications.",
-      "Optimized LLM classes using inheritance, leading to an 82% reduction in code from 200+ lines.",
-    ],
   },
   {
     title: "Electrical Engineering Intern",
@@ -206,10 +176,6 @@ export const experiences = [
     icon: "/experience/metrobotics.png",
     iconBg: "#F6817E",
     date: "September 2023 - May 2024",
-    points: [
-      "Executed component analysis, reducing costs by 78% by identifying optimal alternatives.",
-      "Achieved proficiency in KiCad and datasheet analysis, reducing turnaround time by 40% for analyzing 100+ datasheets.",
-    ],
   },
 ];
 
